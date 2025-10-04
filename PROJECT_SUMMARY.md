@@ -170,3 +170,5 @@ The project includes:
 ---
 
 **Safe Route** is a complete, professional-grade web application ready for immediate deployment and use in hackathons or production environments. The codebase is clean, well-documented, and follows modern development best practices.
+
+
