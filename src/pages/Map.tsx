@@ -1,0 +1,226 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { getReports } from '../firebase/firestore';
+import { Report } from '../firebase/firestore';
+import MapComponent from '../components/map/MapComponent';
+import AddReportModal from '../components/map/AddReportModal';
+import { MapPin, Plus, Route, Navigation } from 'lucide-react';
+import toast from 'react-hot-toast';
+
+const Map: React.FC = () => {
+  const { user, isVerifiedWoman } = useAuth();
+  const [reports, setReports] = useState<Report[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showAddReportModal, setShowAddReportModal] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [showRoutePlanning, setShowRoutePlanning] = useState(false);
+  const [startPoint, setStartPoint] = useState<[number, number] | null>(null);
+  const [endPoint, setEndPoint] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const reportsData = await getReports();
+        setReports(reportsData);
+      } catch (error) {
+        console.error('Error fetching reports:', error);
+        toast.error('Failed to load safety reports');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
+  const handleMapClick = (lat: number, lng: number) => {
+    if (isVerifiedWoman) {
+      setSelectedLocation({ lat, lng });
+      setShowAddReportModal(true);
+    }
+  };
+
+  const handleAddReportSuccess = () => {
+    // Refresh reports after adding a new one
+    const fetchReports = async () => {
+      try {
+        const reportsData = await getReports();
+        setReports(reportsData);
+      } catch (error) {
+        console.error('Error fetching reports:', error);
+      }
+    };
+    fetchReports();
+  };
+
+  const handleLocationSelect = (lat: number, lng: number, type: 'start' | 'end') => {
+    if (type === 'start') {
+      setStartPoint([lat, lng]);
+      toast.success('Start point selected');
+    } else {
+      setEndPoint([lat, lng]);
+      toast.success('End point selected');
+    }
+  };
+
+  const clearRoute = () => {
+    setStartPoint(null);
+    setEndPoint(null);
+    setShowRoutePlanning(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="h-screen flex flex-col">
+        {/* Header */}
+        <div className="bg-white shadow-sm border-b border-gray-200 p-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Safety Map</h1>
+              <p className="text-gray-600">View and contribute to community safety reports</p>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              {user && isVerifiedWoman && (
+                <button
+                  onClick={() => setShowAddReportModal(true)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add Report</span>
+                </button>
+              )}
+              
+              <button
+                onClick={() => setShowRoutePlanning(!showRoutePlanning)}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+                  showRoutePlanning
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <Route className="w-4 h-4" />
+                <span>Route Planning</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Route Planning Panel */}
+        {showRoutePlanning && (
+          <div className="bg-white border-b border-gray-200 p-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="w-4 h-4 text-blue-600" />
+                  <span className="text-sm font-medium">Start Point:</span>
+                  {startPoint ? (
+                    <span className="text-sm text-gray-600">
+                      {startPoint[0].toFixed(4)}, {startPoint[1].toFixed(4)}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-400">Click on map to select</span>
+                  )}
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <MapPin className="w-4 h-4 text-purple-600" />
+                  <span className="text-sm font-medium">End Point:</span>
+                  {endPoint ? (
+                    <span className="text-sm text-gray-600">
+                      {endPoint[0].toFixed(4)}, {endPoint[1].toFixed(4)}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-400">Click on map to select</span>
+                  )}
+                </div>
+
+                {(startPoint || endPoint) && (
+                  <button
+                    onClick={clearRoute}
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Map Container */}
+        <div className="flex-1 relative">
+          {loading ? (
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading safety map...</p>
+              </div>
+            </div>
+          ) : (
+            <MapComponent
+              reports={reports}
+              onMapClick={showRoutePlanning ? undefined : handleMapClick}
+              showAddReportButton={!showRoutePlanning}
+            />
+          )}
+
+          {/* Legend */}
+          <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-4">
+            <h3 className="font-semibold text-gray-900 mb-3">Legend</h3>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-safe-500 rounded-full"></div>
+                <span className="text-sm text-gray-700">Safe Area</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-unsafe-500 rounded-full"></div>
+                <span className="text-sm text-gray-700">Unsafe Area</span>
+              </div>
+              {showRoutePlanning && (
+                <>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                    <span className="text-sm text-gray-700">Start Point</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
+                    <span className="text-sm text-gray-700">End Point</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Instructions */}
+          {!user && (
+            <div className="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-4 max-w-xs">
+              <div className="flex items-center space-x-2 text-gray-600 mb-2">
+                <Navigation className="w-5 h-5 text-primary-600" />
+                <span className="font-medium">Get Started</span>
+              </div>
+              <p className="text-sm text-gray-600">
+                Sign up and verify as a woman to contribute safety reports and help build safer communities.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Add Report Modal */}
+      {showAddReportModal && (
+        <AddReportModal
+          isOpen={showAddReportModal}
+          onClose={() => {
+            setShowAddReportModal(false);
+            setSelectedLocation(null);
+          }}
+          latitude={selectedLocation?.lat || 40.7128}
+          longitude={selectedLocation?.lng || -74.0060}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Map;
