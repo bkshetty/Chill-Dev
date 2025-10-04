@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUpWithEmail, signInWithGoogle } from '../../firebase/auth';
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Shield } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Signup: React.FC = () => {

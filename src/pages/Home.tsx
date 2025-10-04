@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getReports } from '../firebase/firestore';
 import { Report } from '../firebase/firestore';
-import { Shield, AlertTriangle, Map, Users, TrendingUp, ArrowRight } from 'lucide-react';
+import { Shield, AlertTriangle, Map, Users, ArrowRight } from 'lucide-react';
 
 const Home: React.FC = () => {
   const { user } = useAuth();

@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 import { Report } from '../../firebase/firestore';
-import { useAuth } from '../../contexts/AuthContext';
-import { MapPin, Shield, AlertTriangle, Clock, User, Navigation, Locate } from 'lucide-react';
+import { Locate } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // Google Maps API key
@@ -14,12 +15,6 @@ const createMarkerIcon = (type: 'safe' | 'unsafe' | 'current') => {
     safe: '#22c55e',
     unsafe: '#ef4444',
     current: '#3b82f6'
-  };
-  
-  const symbols = {
-    safe: '✓',
-    unsafe: '⚠',
-    current: '📍'
   };
 
   return {
@@ -34,22 +29,88 @@ const createMarkerIcon = (type: 'safe' | 'unsafe' | 'current') => {
 };
 
 interface GoogleMapComponentProps {
-  reports: Report[];
   onMapClick?: (lat: number, lng: number) => void;
   showAddReportButton?: boolean;
 }
 
 const MapComponent: React.FC<GoogleMapComponentProps> = ({ 
-  reports, 
-  onMapClick, 
-  showAddReportButton = false 
+  onMapClick
 }) => {
-  const { user } = useAuth();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const [currentLocationMarker, setCurrentLocationMarker] = useState<google.maps.Marker | null>(null);
-  const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+
+  // Update markers function
+  const updateMarkers = useCallback((reportsToShow: Report[]) => {
+    if (!map) return;
+
+    // Clear existing markers
+    markers.forEach(marker => marker.setMap(null));
+    setMarkers([]);
+
+    // Add report markers
+    const newMarkers: google.maps.Marker[] = [];
+    
+    reportsToShow.forEach((report) => {
+      const marker = new google.maps.Marker({
+        position: { lat: report.latitude, lng: report.longitude },
+        map: map,
+        icon: createMarkerIcon(report.type),
+        title: `${report.type === 'safe' ? 'Safe' : 'Unsafe'} Area`
+      });
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div style="padding: 8px; min-width: 200px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span style="color: ${report.type === 'safe' ? '#22c55e' : '#ef4444'};">
+                ${report.type === 'safe' ? '🛡️' : '⚠️'}
+              </span>
+              <span style="font-weight: 500; color: ${report.type === 'safe' ? '#16a34a' : '#dc2626'};">
+                ${report.type === 'safe' ? 'Safe Area' : 'Unsafe Area'}
+              </span>
+            </div>
+            
+            <p style="color: #374151; font-size: 14px; margin-bottom: 8px;">${report.description}</p>
+            
+            <div style="font-size: 12px; color: #6b7280;">
+              <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                <span>👤</span>
+                <span>${report.userDisplayName}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span>🕒</span>
+                <span>${formatDate(report.createdAt)}</span>
+              </div>
+            </div>
+          </div>
+        `
+      });
+
+      marker.addListener('click', () => {
+        infoWindow.open(map, marker);
+      });
+
+      newMarkers.push(marker);
+    });
+
+    setMarkers(newMarkers);
+  }, [map, markers]);
+
+  // Real-time listener for reports
+  useEffect(() => {
+    const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const updatedReports: Report[] = [];
+      snapshot.forEach((doc) => {
+        updatedReports.push({ id: doc.id, ...doc.data() } as Report);
+      });
+      // Update markers when reports change
+      updateMarkers(updatedReports);
+    });
+    return () => unsubscribe();
+  }, [updateMarkers]);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -62,7 +123,6 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
   };
 
   const handleLocationFound = useCallback((lat: number, lng: number) => {
-    setCurrentLocation({ lat, lng });
     
     if (map) {
       map.setCenter({ lat, lng });
@@ -141,64 +201,22 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
     );
   };
 
-  // Initialize map
+  // Add map click listener
   useEffect(() => {
-    if (!map) return;
+    if (!map || !onMapClick) return;
 
-    // Clear existing markers
-    markers.forEach(marker => marker.setMap(null));
-    setMarkers([]);
-
-    // Add report markers
-    const newMarkers: google.maps.Marker[] = [];
-    
-    reports.forEach((report) => {
-      const marker = new google.maps.Marker({
-        position: { lat: report.latitude, lng: report.longitude },
-        map: map,
-        icon: createMarkerIcon(report.type),
-        title: `${report.type === 'safe' ? 'Safe' : 'Unsafe'} Area`
-      });
-
-      const infoWindow = new google.maps.InfoWindow({
-        content: `
-          <div style="padding: 8px; min-width: 200px;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-              <span style="color: ${report.type === 'safe' ? '#22c55e' : '#ef4444'};">
-                ${report.type === 'safe' ? '🛡️' : '⚠️'}
-              </span>
-              <span style="font-weight: 500; color: ${report.type === 'safe' ? '#16a34a' : '#dc2626'};">
-                ${report.type === 'safe' ? 'Safe Area' : 'Unsafe Area'}
-              </span>
-            </div>
-            
-            <p style="color: #374151; font-size: 14px; margin-bottom: 8px;">${report.description}</p>
-            
-            <div style="font-size: 12px; color: #6b7280;">
-              <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
-                <span>👤</span>
-                <span>${report.userDisplayName}</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 4px;">
-                <span>🕒</span>
-                <span>${formatDate(report.createdAt)}</span>
-              </div>
-            </div>
-          </div>
-        `
-      });
-
-      marker.addListener('click', () => {
-        infoWindow.open(map, marker);
-      });
-
-      newMarkers.push(marker);
+    const clickListener = map.addListener('click', (event: google.maps.MapMouseEvent) => {
+      if (event.latLng) {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        onMapClick(lat, lng);
+      }
     });
 
-    setMarkers(newMarkers);
-  }, [map, reports]);
-
-  // Add map click listener
+    return () => {
+      google.maps.event.removeListener(clickListener);
+    };
+  }, [map, onMapClick]);
   useEffect(() => {
     if (!map || !onMapClick) return;
 
@@ -265,7 +283,6 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
       <Wrapper apiKey={GOOGLE_MAPS_API_KEY} render={render}>
         <div
           id="google-map"
-          style={{ height: '100%', width: '100%' }}
           ref={(element) => {
             if (element && !map) {
               const newMap = new google.maps.Map(element, {

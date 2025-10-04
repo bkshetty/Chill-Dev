@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { getAnalytics } from "firebase/analytics";
 
 // Firebase configuration
 // Replace these values with your actual Firebase config
@@ -18,7 +17,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 // Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
@@ -28,5 +26,8 @@ export const db = getFirestore(app);
 
 // Initialize Firebase Storage and get a reference to the service
 export const storage = getStorage(app);
+
+// Google Maps API Key
+export const GOOGLE_MAPS_API_KEY = 'AIzaSyAI9xG8wgT5IPwPGkVtSRZ0O7sqdSsVF9Q';
 
 export default app;

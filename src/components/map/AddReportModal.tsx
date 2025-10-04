@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, MapPin, AlertTriangle, Shield, Send } from 'lucide-react';
 import { addReport } from '../../firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
+import { findNearestPolice } from '../../utils/mapUtils';
 import toast from 'react-hot-toast';
 
 interface AddReportModalProps {
@@ -47,6 +48,17 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
         userDisplayName: userProfile.displayName
       });
 
+      // Send to police for unsafe reports
+      if (reportType === 'unsafe') {
+        try {
+          const policeStation = await findNearestPolice(latitude, longitude);
+          toast.success(`Report sent to nearest police station: ${policeStation}`);
+        } catch (policeError) {
+          console.error('Failed to find police station:', policeError);
+          toast.error('Report added but failed to notify police');
+        }
+      }
+
       toast.success('Report added successfully!');
       setDescription('');
       setReportType('safe');
@@ -69,6 +81,7 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg p-1 transition-all duration-300 ease-in-out transform hover:scale-110"
+              aria-label="Close modal"
             >
               <X className="w-6 h-6" />
             </button>

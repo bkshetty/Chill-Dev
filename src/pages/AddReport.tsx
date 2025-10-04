@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { getReports } from '../firebase/firestore';
-import { Report } from '../firebase/firestore';
 import GoogleMapComponent from '../components/map/GoogleMapComponent';
 import AddReportModal from '../components/map/AddReportModal';
 import { Shield, AlertTriangle, Plus, ArrowLeft } from 'lucide-react';
@@ -10,22 +8,8 @@ import { Shield, AlertTriangle, Plus, ArrowLeft } from 'lucide-react';
 const AddReport: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [reports, setReports] = useState<Report[]>([]);
   const [showAddReportModal, setShowAddReportModal] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
-
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const reportsData = await getReports();
-        setReports(reportsData);
-      } catch (error) {
-        console.error('Error fetching reports:', error);
-      }
-    };
-
-    fetchReports();
-  }, []);
 
   useEffect(() => {
     if (!user) {
@@ -37,19 +21,6 @@ const AddReport: React.FC = () => {
   const handleMapClick = (lat: number, lng: number) => {
     setSelectedLocation({ lat, lng });
     setShowAddReportModal(true);
-  };
-
-  const handleAddReportSuccess = () => {
-    // Refresh reports after adding a new one
-    const fetchReports = async () => {
-      try {
-        const reportsData = await getReports();
-        setReports(reportsData);
-      } catch (error) {
-        console.error('Error fetching reports:', error);
-      }
-    };
-    fetchReports();
   };
 
   if (!user) {
@@ -104,7 +75,6 @@ const AddReport: React.FC = () => {
         {/* Map Container */}
         <div className="flex-1 relative">
           <GoogleMapComponent
-            reports={reports}
             onMapClick={handleMapClick}
             showAddReportButton={true}
           />

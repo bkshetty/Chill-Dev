@@ -1,65 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { getReports } from '../firebase/firestore';
-import { Report } from '../firebase/firestore';
 import GoogleMapComponent from '../components/map/GoogleMapComponent';
 import AddReportModal from '../components/map/AddReportModal';
 import { MapPin, Plus, Route, Navigation } from 'lucide-react';
-import toast from 'react-hot-toast';
 
 const Map: React.FC = () => {
   const { user } = useAuth();
-  const [reports, setReports] = useState<Report[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showAddReportModal, setShowAddReportModal] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showRoutePlanning, setShowRoutePlanning] = useState(false);
   const [startPoint, setStartPoint] = useState<[number, number] | null>(null);
   const [endPoint, setEndPoint] = useState<[number, number] | null>(null);
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const reportsData = await getReports();
-        setReports(reportsData);
-      } catch (error) {
-        console.error('Error fetching reports:', error);
-        toast.error('Failed to load safety reports');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReports();
-  }, []);
-
   const handleMapClick = (lat: number, lng: number) => {
     if (user) {
       setSelectedLocation({ lat, lng });
       setShowAddReportModal(true);
-    }
-  };
-
-  const handleAddReportSuccess = () => {
-    // Refresh reports after adding a new one
-    const fetchReports = async () => {
-      try {
-        const reportsData = await getReports();
-        setReports(reportsData);
-      } catch (error) {
-        console.error('Error fetching reports:', error);
-      }
-    };
-    fetchReports();
-  };
-
-  const handleLocationSelect = (lat: number, lng: number, type: 'start' | 'end') => {
-    if (type === 'start') {
-      setStartPoint([lat, lng]);
-      toast.success('Start point selected');
-    } else {
-      setEndPoint([lat, lng]);
-      toast.success('End point selected');
     }
   };
 
@@ -150,20 +106,10 @@ const Map: React.FC = () => {
 
         {/* Map Container */}
         <div className="flex-1 relative">
-          {loading ? (
-            <div className="h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading safety map...</p>
-              </div>
-            </div>
-          ) : (
-            <GoogleMapComponent
-              reports={reports}
-              onMapClick={showRoutePlanning ? undefined : handleMapClick}
-              showAddReportButton={!showRoutePlanning}
-            />
-          )}
+          <GoogleMapComponent
+            onMapClick={showRoutePlanning ? undefined : handleMapClick}
+            showAddReportButton={!showRoutePlanning}
+          />
 
           {/* Legend */}
           <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-4">

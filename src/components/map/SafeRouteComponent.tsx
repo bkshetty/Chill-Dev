@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useEffect, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet-routing-machine';
 import { Report } from '../../firebase/firestore';
@@ -95,7 +95,6 @@ const SafeRouteComponent: React.FC<SafeRouteComponentProps> = ({
         ],
         routeWhileDragging: false,
         addWaypoints: false,
-        createMarker: () => null, // We'll add our own markers
         lineOptions: {
           styles: [
             {
@@ -103,7 +102,9 @@ const SafeRouteComponent: React.FC<SafeRouteComponentProps> = ({
               weight: 6,
               opacity: 0.8
             }
-          ]
+          ],
+          extendToWaypoints: true,
+          missingRouteTolerance: 0
         }
       }).addTo(mapRef.current);
 
@@ -205,13 +206,15 @@ const SafeRouteComponent: React.FC<SafeRouteComponentProps> = ({
 
         {/* Unsafe Route Segments */}
         {unsafeSegments && unsafeSegments.map((segment, index) => (
-          <L.Polyline
+          <Polyline
             key={index}
             positions={segment}
-            color="#ef4444"
-            weight={8}
-            opacity={0.7}
-            dashArray="10, 10"
+            pathOptions={{
+              color: '#ef4444',
+              weight: 8,
+              opacity: 0.7,
+              dashArray: '10, 10'
+            }}
           />
         ))}
       </MapContainer>

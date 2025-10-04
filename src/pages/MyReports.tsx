@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserReports, deleteReport } from '../firebase/firestore';
 import { Report } from '../firebase/firestore';
-import { Shield, AlertTriangle, Trash2, Edit, Calendar, MapPin } from 'lucide-react';
+import { Shield, AlertTriangle, Trash2, Calendar, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const MyReports: React.FC = () => {

@@ -4,7 +4,6 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
-  User,
   updateProfile
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
