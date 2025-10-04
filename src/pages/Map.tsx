@@ -151,6 +151,17 @@ const Map: React.FC = () => {
             </div>
           )}
 
+          {/* Floating Add Report Button */}
+          {user && !showAddReportModal && (
+            <button
+              onClick={() => setShowAddReportModal(true)}
+              className="absolute top-20 right-4 bg-primary-600 hover:bg-primary-700 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 z-10"
+              title="Add Safety Report"
+            >
+              <Plus className="w-6 h-6" />
+            </button>
+          )}
+
           {/* Location Services Info */}
           {user && (
             <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-3 max-w-xs">

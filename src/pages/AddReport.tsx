@@ -23,6 +23,11 @@ const AddReport: React.FC = () => {
     setShowAddReportModal(true);
   };
 
+  const handleAddReportSuccess = () => {
+    // Navigate to map page after successful report
+    navigate('/map');
+  };
+
   if (!user) {
     return null;
   }
@@ -117,6 +122,7 @@ const AddReport: React.FC = () => {
           }}
           latitude={selectedLocation?.lat || 40.7128}
           longitude={selectedLocation?.lng || -74.0060}
+          onSuccess={handleAddReportSuccess}
         />
       )}
     </div>

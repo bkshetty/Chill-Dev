@@ -10,13 +10,15 @@ interface AddReportModalProps {
   onClose: () => void;
   latitude: number;
   longitude: number;
+  onSuccess?: () => void;
 }
 
 const AddReportModal: React.FC<AddReportModalProps> = ({
   isOpen,
   onClose,
   latitude,
-  longitude
+  longitude,
+  onSuccess
 }) => {
   const { user, userProfile } = useAuth();
   const [reportType, setReportType] = useState<'safe' | 'unsafe'>('safe');
@@ -48,21 +50,27 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
         userDisplayName: userProfile.displayName
       });
 
+      toast.success('Report added successfully!');
+
       // Send to police for unsafe reports
       if (reportType === 'unsafe') {
         try {
           const policeStation = await findNearestPolice(latitude, longitude);
-          toast.success(`Report sent to nearest police station: ${policeStation}`);
+          toast.success(`🚔 Report forwarded to: ${policeStation}`);
         } catch (policeError) {
           console.error('Failed to find police station:', policeError);
-          toast.error('Report added but failed to notify police');
+          toast.error('⚠️ Report saved but police notification failed');
         }
       }
 
-      toast.success('Report added successfully!');
       setDescription('');
       setReportType('safe');
       onClose();
+      
+      // Call success callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error: any) {
       toast.error(error.message || 'Failed to add report');
     } finally {

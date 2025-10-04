@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { getReports } from '../firebase/firestore';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '../firebase/config';
 import { Report } from '../firebase/firestore';
 import { Shield, AlertTriangle, Map, Users, ArrowRight } from 'lucide-react';
 
@@ -11,18 +12,21 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const reportsData = await getReports();
-        setReports(reportsData);
-      } catch (error) {
-        console.error('Error fetching reports:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Real-time listener for reports
+    const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const reportsData: Report[] = [];
+      snapshot.forEach((doc) => {
+        reportsData.push({ id: doc.id, ...doc.data() } as Report);
+      });
+      setReports(reportsData);
+      setLoading(false);
+    }, (error) => {
+      console.error('Error fetching reports:', error);
+      setLoading(false);
+    });
 
-    fetchReports();
+    return () => unsubscribe();
   }, []);
 
   const safeReports = reports.filter(report => report.type === 'safe');
@@ -82,15 +86,13 @@ const Home: React.FC = () => {
                 View Safety Map
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
-              {user && (
-                <Link
-                  to="/add-report"
-                  className="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-semibold rounded-xl hover:bg-white/90 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
-                >
-                  <Shield className="w-5 h-5 mr-2" />
-                  Add Safety Report
-                </Link>
-              )}
+              <Link
+                to="/add-report"
+                className="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-semibold rounded-xl hover:bg-white/90 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+              >
+                <Shield className="w-5 h-5 mr-2" />
+                Add Safety Report
+              </Link>
             </div>
           </div>
         </div>
