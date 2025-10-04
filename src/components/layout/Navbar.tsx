@@ -6,7 +6,7 @@ import { Menu, X, Map, Plus, User, LogOut, Shield, Home } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Navbar: React.FC = () => {
-  const { user, userProfile, isVerifiedWoman } = useAuth();
+  const { user, userProfile } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,8 +32,8 @@ const Navbar: React.FC = () => {
       to={to}
       className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 ${
         isActive(to)
-          ? 'bg-white/30 text-white shadow-lg backdrop-blur-sm'
-          : 'text-white/90 hover:text-white hover:bg-white/20 hover:shadow-md backdrop-blur-sm'
+          ? 'bg-primary-600 text-white shadow-lg'
+          : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 hover:shadow-md'
       }`}
       onClick={() => setIsMenuOpen(false)}
     >
@@ -43,15 +43,15 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/20 backdrop-blur-md border-b border-white/20 shadow-lg">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-white/30 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="w-7 h-7 bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-all duration-300 group-hover:bg-white/40 group-hover:scale-110">
+            <div className="w-7 h-7 bg-primary-600 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:bg-primary-700 group-hover:scale-110">
               <Shield className="w-4 h-4 text-white" />
             </div>
-            <span className="text-lg font-bold text-white group-hover:text-white/90 transition-colors duration-300">Safe Route</span>
+            <span className="text-lg font-bold text-gray-800 group-hover:text-gray-700 transition-colors duration-300">Safe Route</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
             <NavLink to="/map" icon={<Map className="w-4 h-4" />}>
               Map
             </NavLink>
-            {user && isVerifiedWoman && (
+            {user && (
               <NavLink to="/add-report" icon={<Plus className="w-4 h-4" />}>
                 Add Report
               </NavLink>
@@ -79,17 +79,11 @@ const Navbar: React.FC = () => {
             {user ? (
               <div className="flex items-center space-x-3">
                 <div className="text-right">
-                  <p className="text-sm font-medium text-white">{userProfile?.displayName}</p>
-                  {isVerifiedWoman && (
-                    <p className="text-xs text-white/80 flex items-center">
-                      <Shield className="w-3 h-3 mr-1" />
-                      Verified Woman
-                    </p>
-                  )}
+                  <p className="text-sm font-medium text-gray-800">{userProfile?.displayName}</p>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 px-3 py-2 text-white/90 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 backdrop-blur-sm"
+                  className="flex items-center space-x-1 px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
                 >
                   <LogOut className="w-4 h-4" />
                   <span className="font-medium">Logout</span>
@@ -99,13 +93,13 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-white/90 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 backdrop-blur-sm font-medium"
+                  className="px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 font-medium"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 bg-white/30 text-white rounded-lg hover:bg-white/40 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 backdrop-blur-sm font-medium"
+                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 font-medium"
                 >
                   Sign Up
                 </Link>
@@ -117,7 +111,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white/90 hover:text-white hover:bg-white/20 rounded-lg p-2 transition-all duration-300 ease-in-out transform hover:scale-110 backdrop-blur-sm"
+              className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg p-2 transition-all duration-300 ease-in-out transform hover:scale-110"
             >
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -127,14 +121,14 @@ const Navbar: React.FC = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden animate-fadeIn">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white/20 backdrop-blur-md border-t border-white/20 rounded-b-xl mx-2 mb-2">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md border-t border-gray-200 rounded-b-xl mx-2 mb-2 shadow-lg">
               <NavLink to="/" icon={<Home className="w-4 h-4" />}>
                 Home
               </NavLink>
               <NavLink to="/map" icon={<Map className="w-4 h-4" />}>
                 Map
               </NavLink>
-              {user && isVerifiedWoman && (
+              {user && (
                 <NavLink to="/add-report" icon={<Plus className="w-4 h-4" />}>
                   Add Report
                 </NavLink>
@@ -146,36 +140,30 @@ const Navbar: React.FC = () => {
               )}
               
               {user ? (
-                <div className="pt-4 border-t border-white/20">
+                <div className="pt-4 border-t border-gray-200">
                   <div className="px-3 py-2">
-                    <p className="text-sm font-medium text-white">{userProfile?.displayName}</p>
-                    {isVerifiedWoman && (
-                      <p className="text-xs text-white/80 flex items-center mt-1">
-                        <Shield className="w-3 h-3 mr-1" />
-                        Verified Woman
-                      </p>
-                    )}
+                    <p className="text-sm font-medium text-gray-800">{userProfile?.displayName}</p>
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center space-x-2 px-3 py-2 text-white/90 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-300 ease-in-out backdrop-blur-sm"
+                    className="w-full flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-300 ease-in-out"
                   >
                     <LogOut className="w-4 h-4" />
                     <span className="font-medium">Logout</span>
                   </button>
                 </div>
               ) : (
-                <div className="pt-4 border-t border-white/20 space-y-2">
+                <div className="pt-4 border-t border-gray-200 space-y-2">
                   <Link
                     to="/login"
-                    className="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-300 ease-in-out backdrop-blur-sm font-medium"
+                    className="block px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-300 ease-in-out font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     to="/signup"
-                    className="block px-3 py-2 bg-white/30 text-white rounded-lg hover:bg-white/40 hover:shadow-lg transition-all duration-300 ease-in-out text-center font-medium backdrop-blur-sm"
+                    className="block px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 hover:shadow-lg transition-all duration-300 ease-in-out text-center font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign Up

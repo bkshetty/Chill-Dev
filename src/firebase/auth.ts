@@ -16,15 +16,13 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName: string;
-  isVerifiedWoman: boolean;
   createdAt: Date;
 }
 
 export const signUpWithEmail = async (
   email: string,
   password: string,
-  displayName: string,
-  isWoman: boolean
+  displayName: string
 ): Promise<UserProfile> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -38,7 +36,6 @@ export const signUpWithEmail = async (
       uid: user.uid,
       email: user.email!,
       displayName,
-      isVerifiedWoman: isWoman,
       createdAt: new Date()
     };
 
@@ -83,7 +80,6 @@ export const signInWithGoogle = async (): Promise<UserProfile> => {
         uid: user.uid,
         email: user.email!,
         displayName: user.displayName || 'Anonymous',
-        isVerifiedWoman: false, // Default to false, user needs to verify
         createdAt: new Date()
       };
 

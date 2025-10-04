@@ -25,8 +25,8 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user || !userProfile?.isVerifiedWoman) {
-      toast.error('Only verified women can add reports');
+    if (!user || !userProfile) {
+      toast.error('You must be logged in to add reports');
       return;
     }
 
@@ -44,8 +44,7 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
         latitude,
         longitude,
         userId: user.uid,
-        userDisplayName: userProfile.displayName,
-        isVerifiedWoman: userProfile.isVerifiedWoman
+        userDisplayName: userProfile.displayName
       });
 
       toast.success('Report added successfully!');

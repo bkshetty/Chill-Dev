@@ -9,8 +9,7 @@ const Signup: React.FC = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    displayName: '',
-    isWoman: false
+    displayName: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -44,8 +43,7 @@ const Signup: React.FC = () => {
       await signUpWithEmail(
         formData.email,
         formData.password,
-        formData.displayName,
-        formData.isWoman
+        formData.displayName
       );
       toast.success('Account created successfully!');
       navigate('/');
@@ -169,24 +167,6 @@ const Signup: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-start space-x-3">
-            <input
-              id="isWoman"
-              name="isWoman"
-              type="checkbox"
-              checked={formData.isWoman}
-              onChange={handleChange}
-              className="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-            />
-            <div className="flex-1">
-              <label htmlFor="isWoman" className="text-sm font-medium text-gray-700">
-                I identify as a woman and want to contribute to safety reports
-              </label>
-              <p className="text-xs text-gray-500 mt-1">
-                Only verified women can add safety reports to help protect our community
-              </p>
-            </div>
-          </div>
 
           <button
             type="submit"

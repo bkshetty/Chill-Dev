@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { getReports } from '../firebase/firestore';
 import { Report } from '../firebase/firestore';
-import MapComponent from '../components/map/MapComponent';
+import GoogleMapComponent from '../components/map/GoogleMapComponent';
 import AddReportModal from '../components/map/AddReportModal';
 import { MapPin, Plus, Route, Navigation } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Map: React.FC = () => {
-  const { user, isVerifiedWoman } = useAuth();
+  const { user } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddReportModal, setShowAddReportModal] = useState(false);
@@ -34,7 +34,7 @@ const Map: React.FC = () => {
   }, []);
 
   const handleMapClick = (lat: number, lng: number) => {
-    if (isVerifiedWoman) {
+    if (user) {
       setSelectedLocation({ lat, lng });
       setShowAddReportModal(true);
     }
@@ -70,8 +70,8 @@ const Map: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="h-screen flex flex-col">
+    <div className="w-full h-full">
+      <div className="w-full h-full flex flex-col">
         {/* Header */}
         <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200/50 p-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -81,7 +81,7 @@ const Map: React.FC = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-              {user && isVerifiedWoman && (
+              {user && (
                 <button
                   onClick={() => setShowAddReportModal(true)}
                   className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
@@ -158,7 +158,7 @@ const Map: React.FC = () => {
               </div>
             </div>
           ) : (
-            <MapComponent
+            <GoogleMapComponent
               reports={reports}
               onMapClick={showRoutePlanning ? undefined : handleMapClick}
               showAddReportButton={!showRoutePlanning}
@@ -200,7 +200,20 @@ const Map: React.FC = () => {
                 <span className="font-medium">Get Started</span>
               </div>
               <p className="text-sm text-gray-600">
-                Sign up and verify as a woman to contribute safety reports and help build safer communities.
+                Sign up to contribute safety reports and help build safer communities.
+              </p>
+            </div>
+          )}
+
+          {/* Location Services Info */}
+          {user && (
+            <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-3 max-w-xs">
+              <div className="flex items-center space-x-2 text-gray-600 mb-1">
+                <Navigation className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium">Location Services</span>
+              </div>
+              <p className="text-xs text-gray-500">
+                Click the location button to find your current position and see nearby safety reports.
               </p>
             </div>
           )}

@@ -14,9 +14,9 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <div className="w-full h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
           <Navbar />
-          <main className="pt-14">
+          <main className="w-full h-full pt-14">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/map" element={<Map />} />

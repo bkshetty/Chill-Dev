@@ -7,14 +7,12 @@ interface AuthContextType {
   user: FirebaseUser | null;
   userProfile: UserProfile | null;
   loading: boolean;
-  isVerifiedWoman: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   userProfile: null,
-  loading: true,
-  isVerifiedWoman: false
+  loading: true
 });
 
 export const useAuth = () => {
@@ -56,13 +54,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const isVerifiedWoman = userProfile?.isVerifiedWoman || false;
-
   const value = {
     user,
     userProfile,
-    loading,
-    isVerifiedWoman
+    loading
   };
 
   return (

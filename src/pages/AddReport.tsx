@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getReports } from '../firebase/firestore';
 import { Report } from '../firebase/firestore';
-import MapComponent from '../components/map/MapComponent';
+import GoogleMapComponent from '../components/map/GoogleMapComponent';
 import AddReportModal from '../components/map/AddReportModal';
 import { Shield, AlertTriangle, Plus, ArrowLeft } from 'lucide-react';
 
 const AddReport: React.FC = () => {
-  const { user, isVerifiedWoman } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
   const [showAddReportModal, setShowAddReportModal] = useState(false);
@@ -32,12 +32,7 @@ const AddReport: React.FC = () => {
       navigate('/login');
       return;
     }
-
-    if (!isVerifiedWoman) {
-      navigate('/');
-      return;
-    }
-  }, [user, isVerifiedWoman, navigate]);
+  }, [user, navigate]);
 
   const handleMapClick = (lat: number, lng: number) => {
     setSelectedLocation({ lat, lng });
@@ -57,13 +52,13 @@ const AddReport: React.FC = () => {
     fetchReports();
   };
 
-  if (!user || !isVerifiedWoman) {
+  if (!user) {
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="h-screen flex flex-col">
+    <div className="w-full h-full bg-gray-50">
+      <div className="w-full h-full flex flex-col">
         {/* Header */}
         <div className="bg-white shadow-sm border-b border-gray-200 p-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -83,7 +78,7 @@ const AddReport: React.FC = () => {
             
             <div className="flex items-center space-x-2 px-3 py-2 bg-primary-100 rounded-lg">
               <Shield className="w-4 h-4 text-primary-600" />
-              <span className="text-sm font-medium text-primary-700">Verified Woman</span>
+              <span className="text-sm font-medium text-primary-700">Community Member</span>
             </div>
           </div>
         </div>
@@ -108,7 +103,7 @@ const AddReport: React.FC = () => {
 
         {/* Map Container */}
         <div className="flex-1 relative">
-          <MapComponent
+          <GoogleMapComponent
             reports={reports}
             onMapClick={handleMapClick}
             showAddReportButton={true}

@@ -106,11 +106,6 @@ const MyReports: React.FC = () => {
                           <span className="font-semibold text-unsafe-700">Unsafe Area</span>
                         </div>
                       )}
-                      {report.isVerifiedWoman && (
-                        <span className="bg-primary-100 text-primary-800 text-xs px-2 py-1 rounded-full">
-                          Verified Woman
-                        </span>
-                      )}
                     </div>
 
                     <p className="text-gray-700 mb-4">{report.description}</p>

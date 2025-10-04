@@ -6,7 +6,7 @@ import { Report } from '../firebase/firestore';
 import { Shield, AlertTriangle, Map, Users, TrendingUp, ArrowRight } from 'lucide-react';
 
 const Home: React.FC = () => {
-  const { user, isVerifiedWoman } = useAuth();
+  const { user } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +27,7 @@ const Home: React.FC = () => {
 
   const safeReports = reports.filter(report => report.type === 'safe');
   const unsafeReports = reports.filter(report => report.type === 'unsafe');
-  const verifiedReports = reports.filter(report => report.isVerifiedWoman);
+  const totalReports = reports.length;
 
   const stats = [
     {
@@ -52,8 +52,8 @@ const Home: React.FC = () => {
       bgColor: 'bg-unsafe-100'
     },
     {
-      title: 'Verified Reports',
-      value: verifiedReports.length,
+      title: 'Community Members',
+      value: totalReports > 0 ? Math.max(1, Math.floor(totalReports / 2)) : 0,
       icon: Users,
       color: 'text-primary-600',
       bgColor: 'bg-primary-100'
@@ -82,7 +82,7 @@ const Home: React.FC = () => {
                 View Safety Map
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
-              {user && isVerifiedWoman && (
+              {user && (
                 <Link
                   to="/add-report"
                   className="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-semibold rounded-xl hover:bg-white/90 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
@@ -127,17 +127,6 @@ const Home: React.FC = () => {
                   <span className="text-primary-600 font-bold">1</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Verified Women Report</h3>
-                  <p className="text-gray-600">
-                    Only verified women can add safety reports to ensure authentic, trustworthy information.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-primary-600 font-bold">2</span>
-                </div>
-                <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Real-time Map Updates</h3>
                   <p className="text-gray-600">
                     View safe and unsafe areas on an interactive map with detailed descriptions and timestamps.
@@ -146,7 +135,7 @@ const Home: React.FC = () => {
               </div>
               <div className="flex items-start space-x-4">
                 <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-primary-600 font-bold">3</span>
+                  <span className="text-primary-600 font-bold">2</span>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Safe Route Planning</h3>

@@ -1,22 +1,21 @@
 rules_version = '2';
 
 // Firebase Storage Security Rules for Safe Route Community Map
-// These rules allow verified women to upload images for safety reports
+// These rules allow authenticated users to upload images for safety reports
 
 service firebase.storage {
   match /b/{bucket}/o {
     
     // Allow users to upload images for safety reports
-    // Only verified women can upload images
+    // Any authenticated user can upload images
     match /reports/{reportId}/{fileName} {
       // Allow read access to all users (public safety information)
       allow read: if true;
       
-      // Allow write access only to verified women
+      // Allow write access to any authenticated user
       allow write: if request.auth != null 
         && request.auth.uid != null
         && exists(/databases/(default)/documents/users/$(request.auth.uid))
-        && get(/databases/(default)/documents/users/$(request.auth.uid)).data.isVerifiedWoman == true
         && request.resource.size < 5 * 1024 * 1024 // 5MB limit
         && request.resource.contentType.matches('image/.*'); // Only images
     }

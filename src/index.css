@@ -2,19 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles for Leaflet popups */
-.leaflet-popup-content-wrapper {
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.leaflet-popup-content {
+/* Ensure full screen visibility */
+html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
 }
 
-.leaflet-popup-tip {
-  background: white;
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure maps are fully visible */
+.map-container,
+#google-map {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100vh;
+}
+
+/* Ensure full height for map pages */
+.h-screen {
+  height: 100vh !important;
+}
+
+/* Fix any potential overflow issues */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Google Maps custom styles */
+.gm-style-iw {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
 }
 
 /* Custom scrollbar */

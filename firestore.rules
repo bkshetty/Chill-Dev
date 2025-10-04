@@ -12,12 +12,11 @@ service cloud.firestore {
       // Anyone can read reports (public safety information)
       allow read: if true;
       
-      // Only verified women can create reports
+      // Any authenticated user can create reports
       allow create: if request.auth != null 
         && request.auth.uid != null
         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isVerifiedWoman == true
-        && request.resource.data.keys().hasAll(['type', 'description', 'latitude', 'longitude', 'userId', 'userDisplayName', 'isVerifiedWoman', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasAll(['type', 'description', 'latitude', 'longitude', 'userId', 'userDisplayName', 'createdAt', 'updatedAt'])
         && request.resource.data.type in ['safe', 'unsafe']
         && request.resource.data.description is string
         && request.resource.data.description.size() > 0
@@ -26,14 +25,13 @@ service cloud.firestore {
         && request.resource.data.longitude is number
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.userDisplayName is string
-        && request.resource.data.isVerifiedWoman == true
         && request.resource.data.createdAt is timestamp
         && request.resource.data.updatedAt is timestamp;
       
       // Only the report author can update their own reports
       allow update: if request.auth != null 
         && request.auth.uid == resource.data.userId
-        && request.resource.data.keys().hasAll(['type', 'description', 'latitude', 'longitude', 'userId', 'userDisplayName', 'isVerifiedWoman', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasAll(['type', 'description', 'latitude', 'longitude', 'userId', 'userDisplayName', 'createdAt', 'updatedAt'])
         && request.resource.data.type in ['safe', 'unsafe']
         && request.resource.data.description is string
         && request.resource.data.description.size() > 0
@@ -42,7 +40,6 @@ service cloud.firestore {
         && request.resource.data.longitude is number
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.userDisplayName is string
-        && request.resource.data.isVerifiedWoman == true
         && request.resource.data.createdAt == resource.data.createdAt // Prevent modification of creation timestamp
         && request.resource.data.updatedAt is timestamp;
       

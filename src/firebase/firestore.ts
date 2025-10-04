@@ -20,7 +20,6 @@ export interface Report {
   longitude: number;
   userId: string;
   userDisplayName: string;
-  isVerifiedWoman: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
