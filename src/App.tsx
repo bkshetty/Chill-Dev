@@ -14,7 +14,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="w-full h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
+        <div className="w-full h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-auto">
           <Navbar />
           <main className="w-full h-full pt-14">
             <Routes>
