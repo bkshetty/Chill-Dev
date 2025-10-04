@@ -71,8 +71,8 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20 animate-fadeIn">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Join Safe Route</h1>
           <p className="text-gray-600">Create your account to help build safer communities</p>
@@ -91,7 +91,7 @@ const Signup: React.FC = () => {
                 type="text"
                 value={formData.displayName}
                 onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 ease-in-out bg-white/80 backdrop-blur-sm"
                 placeholder="Enter your full name"
                 required
               />
@@ -110,7 +110,7 @@ const Signup: React.FC = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 ease-in-out bg-white/80 backdrop-blur-sm"
                 placeholder="Enter your email"
                 required
               />
@@ -129,7 +129,7 @@ const Signup: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 ease-in-out bg-white/80 backdrop-blur-sm"
                 placeholder="Create a password"
                 required
               />
@@ -155,7 +155,7 @@ const Signup: React.FC = () => {
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 ease-in-out bg-white/80 backdrop-blur-sm"
                 placeholder="Confirm your password"
                 required
               />
@@ -191,7 +191,7 @@ const Signup: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            className="w-full bg-primary-600 text-white py-3 px-4 rounded-xl hover:bg-primary-700 hover:shadow-lg focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all duration-300 ease-in-out transform hover:scale-105 font-medium"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -217,7 +217,7 @@ const Signup: React.FC = () => {
           <button
             onClick={handleGoogleSignup}
             disabled={loading}
-            className="mt-4 w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            className="mt-4 w-full bg-white/80 backdrop-blur-sm border border-gray-300 text-gray-700 py-3 px-4 rounded-xl hover:bg-white hover:shadow-lg focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all duration-300 ease-in-out transform hover:scale-105 font-medium"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path

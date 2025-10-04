@@ -61,10 +61,11 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Safe Route
@@ -75,7 +76,7 @@ const Home: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/map"
-                className="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 border border-white/20"
               >
                 <Map className="w-5 h-5 mr-2" />
                 View Safety Map
@@ -84,7 +85,7 @@ const Home: React.FC = () => {
               {user && isVerifiedWoman && (
                 <Link
                   to="/add-report"
-                  className="inline-flex items-center px-6 py-3 bg-primary-500 text-white font-semibold rounded-lg hover:bg-primary-400 transition-colors"
+                  className="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-semibold rounded-xl hover:bg-white/90 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
                 >
                   <Shield className="w-5 h-5 mr-2" />
                   Add Safety Report
@@ -106,12 +107,12 @@ const Home: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <div className={`w-12 h-12 ${stat.bgColor} rounded-lg flex items-center justify-center mx-auto mb-4`}>
+            <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl p-6 text-center transition-all duration-300 ease-in-out transform hover:scale-105 border border-white/20">
+              <div className={`w-12 h-12 ${stat.bgColor} rounded-lg flex items-center justify-center mx-auto mb-4 transition-all duration-300 hover:scale-110`}>
                 <stat.icon className={`w-6 h-6 ${stat.color}`} />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">{stat.value}</h3>
-              <p className="text-gray-600">{stat.title}</p>
+              <p className="text-gray-600 font-medium">{stat.title}</p>
             </div>
           ))}
         </div>

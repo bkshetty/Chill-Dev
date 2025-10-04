@@ -70,10 +70,10 @@ const Map: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="h-screen flex flex-col">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-200 p-4">
+        <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200/50 p-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Safety Map</h1>
@@ -84,23 +84,23 @@ const Map: React.FC = () => {
               {user && isVerifiedWoman && (
                 <button
                   onClick={() => setShowAddReportModal(true)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Add Report</span>
+                  <span className="font-medium">Add Report</span>
                 </button>
               )}
               
               <button
                 onClick={() => setShowRoutePlanning(!showRoutePlanning)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 ${
                   showRoutePlanning
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-primary-600 text-white shadow-lg'
+                    : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-md border border-gray-200/50'
                 }`}
               >
                 <Route className="w-4 h-4" />
-                <span>Route Planning</span>
+                <span className="font-medium">Route Planning</span>
               </button>
             </div>
           </div>
@@ -108,7 +108,7 @@ const Map: React.FC = () => {
 
         {/* Route Planning Panel */}
         {showRoutePlanning && (
-          <div className="bg-white border-b border-gray-200 p-4">
+          <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 p-4 animate-fadeIn">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">

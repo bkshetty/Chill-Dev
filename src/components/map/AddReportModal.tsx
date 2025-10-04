@@ -62,25 +62,25 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+      <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-white/20 animate-fadeIn">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Add Safety Report</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg p-1 transition-all duration-300 ease-in-out transform hover:scale-110"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="mb-6 p-4 bg-gray-50/80 backdrop-blur-sm rounded-xl border border-gray-200/50">
             <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
               <MapPin className="w-4 h-4" />
-              <span>Location</span>
+              <span className="font-medium">Location</span>
             </div>
-            <p className="text-sm text-gray-800">
+            <p className="text-sm text-gray-800 font-mono">
               {latitude.toFixed(6)}, {longitude.toFixed(6)}
             </p>
           </div>
@@ -94,10 +94,10 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setReportType('safe')}
-                  className={`p-4 rounded-lg border-2 transition-all ${
+                  className={`p-4 rounded-xl border-2 transition-all duration-300 ease-in-out transform hover:scale-105 ${
                     reportType === 'safe'
-                      ? 'border-safe-500 bg-safe-50 text-safe-700'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-safe-300'
+                      ? 'border-safe-500 bg-safe-50 text-safe-700 shadow-lg'
+                      : 'border-gray-200 bg-white/80 backdrop-blur-sm text-gray-600 hover:border-safe-300 hover:shadow-md'
                   }`}
                 >
                   <Shield className="w-6 h-6 mx-auto mb-2" />
@@ -106,10 +106,10 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setReportType('unsafe')}
-                  className={`p-4 rounded-lg border-2 transition-all ${
+                  className={`p-4 rounded-xl border-2 transition-all duration-300 ease-in-out transform hover:scale-105 ${
                     reportType === 'unsafe'
-                      ? 'border-unsafe-500 bg-unsafe-50 text-unsafe-700'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-unsafe-300'
+                      ? 'border-unsafe-500 bg-unsafe-50 text-unsafe-700 shadow-lg'
+                      : 'border-gray-200 bg-white/80 backdrop-blur-sm text-gray-600 hover:border-unsafe-300 hover:shadow-md'
                   }`}
                 >
                   <AlertTriangle className="w-6 h-6 mx-auto mb-2" />
@@ -126,7 +126,7 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none transition-all duration-300 ease-in-out bg-white/80 backdrop-blur-sm"
                 rows={4}
                 placeholder={`Describe why this area is ${reportType === 'safe' ? 'safe' : 'unsafe'}...`}
                 required
@@ -140,14 +140,14 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                className="flex-1 px-4 py-3 text-gray-700 bg-gray-100/80 backdrop-blur-sm rounded-xl hover:bg-gray-200 hover:shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 font-medium"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading || !description.trim()}
-                className="flex-1 px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                className="flex-1 px-4 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 hover:shadow-lg focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all duration-300 ease-in-out transform hover:scale-105 font-medium"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
