@@ -37,8 +37,6 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const [currentLocationMarker, setCurrentLocationMarker] = useState<google.maps.Marker | null>(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-  const [hoverInfo, setHoverInfo] = useState<{lat: number; lng: number; address: string} | null>(null);
-  const [mousePosition, setMousePosition] = useState<{x: number; y: number}>({x: 0, y: 0});
 
   // Update markers function
   const updateMarkers = useCallback((reportsToShow: Report[]) => {
@@ -59,7 +57,35 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
         title: `${report.type === 'safe' ? 'Safe' : 'Unsafe'} Area`
       });
 
-      const infoWindow = new google.maps.InfoWindow({
+      // Hover tooltip - compact preview
+      const hoverTooltip = new google.maps.InfoWindow({
+        content: `
+          <div style="font-family: Arial, sans-serif; min-width: 200px; max-width: 280px; padding: 0;">
+            <div style="background: ${report.type === 'safe' ? 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)' : 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)'}; color: white; padding: 10px 12px; border-radius: 6px 6px 0 0; margin: -8px -8px 0 -8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">${report.type === 'safe' ? '🛡️' : '⚠️'}</span>
+                <div style="flex: 1;">
+                  <div style="font-size: 14px; font-weight: bold;">
+                    ${report.type === 'safe' ? 'Safe Area' : 'Unsafe Area'}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="padding: 10px 12px; background: white;">
+              <div style="font-size: 13px; color: #333; line-height: 1.4; margin-bottom: 8px;">
+                ${report.description.length > 80 ? report.description.substring(0, 80) + '...' : report.description}
+              </div>
+              <div style="font-size: 11px; color: #666; border-top: 1px solid #e5e7eb; padding-top: 6px;">
+                <div style="margin-bottom: 3px;">👤 ${report.userDisplayName}</div>
+                <div style="font-style: italic;">💡 Click for full details</div>
+              </div>
+            </div>
+          </div>
+        `
+      });
+
+      // Full details info window - shown on click
+      const detailsInfoWindow = new google.maps.InfoWindow({
         content: `
           <div style="font-family: Arial, sans-serif; max-width: 320px; padding: 0;">
             <div style="background: ${report.type === 'safe' ? 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)' : 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)'}; color: white; padding: 16px; border-radius: 8px 8px 0 0; margin: -10px -10px 0 -10px;">
@@ -114,8 +140,21 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
         `
       });
 
+      // Show hover tooltip on mouseover
+      marker.addListener('mouseover', () => {
+        detailsInfoWindow.close();
+        hoverTooltip.open(map, marker);
+      });
+
+      // Hide hover tooltip on mouseout
+      marker.addListener('mouseout', () => {
+        hoverTooltip.close();
+      });
+
+      // Show full details on click
       marker.addListener('click', () => {
-        infoWindow.open(map, marker);
+        hoverTooltip.close();
+        detailsInfoWindow.open(map, marker);
       });
 
       newMarkers.push(marker);
@@ -166,7 +205,35 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
         title: 'Your Location'
       });
 
-      const infoWindow = new google.maps.InfoWindow({
+      // Hover tooltip for your location - compact preview
+      const hoverTooltip = new google.maps.InfoWindow({
+        content: `
+          <div style="font-family: Arial, sans-serif; min-width: 180px; max-width: 240px; padding: 0;">
+            <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 10px 12px; border-radius: 6px 6px 0 0; margin: -8px -8px 0 -8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">📍</span>
+                <div style="flex: 1;">
+                  <div style="font-size: 14px; font-weight: bold;">Your Location</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: bold;">
+                  🔴 LIVE
+                </div>
+              </div>
+            </div>
+            <div style="padding: 10px 12px; background: white;">
+              <div style="font-family: monospace; font-size: 12px; color: #333; margin-bottom: 6px;">
+                ${lat.toFixed(6)}, ${lng.toFixed(6)}
+              </div>
+              <div style="font-size: 10px; color: #666; border-top: 1px solid #e5e7eb; padding-top: 6px; font-style: italic;">
+                💡 Click for full details
+              </div>
+            </div>
+          </div>
+        `
+      });
+
+      // Full details info window - shown on click
+      const detailsInfoWindow = new google.maps.InfoWindow({
         content: `
           <div style="font-family: Arial, sans-serif; max-width: 300px; padding: 0;">
             <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 16px; border-radius: 8px 8px 0 0; margin: -10px -10px 0 -10px;">
@@ -207,8 +274,21 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
         `
       });
 
+      // Show hover tooltip on mouseover
+      marker.addListener('mouseover', () => {
+        detailsInfoWindow.close();
+        hoverTooltip.open(map, marker);
+      });
+
+      // Hide hover tooltip on mouseout
+      marker.addListener('mouseout', () => {
+        hoverTooltip.close();
+      });
+
+      // Show full details on click
       marker.addListener('click', () => {
-        infoWindow.open(map, marker);
+        hoverTooltip.close();
+        detailsInfoWindow.open(map, marker);
       });
 
       setCurrentLocationMarker(marker);
@@ -270,63 +350,21 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
       google.maps.event.removeListener(clickListener);
     };
   }, [map, onMapClick]);
-
-  // Add hover tooltip functionality
   useEffect(() => {
-    if (!map) return;
+    if (!map || !onMapClick) return;
 
-    const geocoder = new google.maps.Geocoder();
-    let debounceTimer: NodeJS.Timeout;
-
-    const mouseMoveListener = map.addListener('mousemove', (event: google.maps.MapMouseEvent) => {
+    const clickListener = map.addListener('click', (event: google.maps.MapMouseEvent) => {
       if (event.latLng) {
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
-
-        // Update mouse position for tooltip
-        const mapDiv = document.getElementById('google-map');
-        if (mapDiv && event.domEvent) {
-          const rect = mapDiv.getBoundingClientRect();
-          const domEvent = event.domEvent as MouseEvent;
-          setMousePosition({
-            x: domEvent.clientX - rect.left,
-            y: domEvent.clientY - rect.top
-          });
-        }
-
-        // Debounce geocoding requests
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-          geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-            if (status === 'OK' && results && results[0]) {
-              setHoverInfo({
-                lat,
-                lng,
-                address: results[0].formatted_address
-              });
-            } else {
-              setHoverInfo({
-                lat,
-                lng,
-                address: 'Address not available'
-              });
-            }
-          });
-        }, 300); // Debounce for 300ms
+        onMapClick(lat, lng);
       }
     });
 
-    const mouseOutListener = map.addListener('mouseout', () => {
-      setHoverInfo(null);
-      clearTimeout(debounceTimer);
-    });
-
     return () => {
-      google.maps.event.removeListener(mouseMoveListener);
-      google.maps.event.removeListener(mouseOutListener);
-      clearTimeout(debounceTimer);
+      google.maps.event.removeListener(clickListener);
     };
-  }, [map]);
+  }, [map, onMapClick]);
 
   // Try to get user's location on component mount
   useEffect(() => {
@@ -417,56 +455,6 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
           <Locate className="w-5 h-5 text-blue-600" />
         )}
       </button>
-
-      {/* Hover Tooltip */}
-      {hoverInfo && (
-        <div
-          className="absolute z-[1100] pointer-events-none tooltip-container"
-          style={{
-            left: `${mousePosition.x + 15}px`,
-            top: `${mousePosition.y + 15}px`,
-          }}
-        >
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-xl tooltip-shadow border-2 border-primary-500 backdrop-blur-sm">
-            <div className="px-5 py-3.5 min-w-[300px] max-w-[380px]">
-              {/* Header */}
-              <div className="flex items-center gap-2 mb-3 pb-2.5 border-b-2 border-primary-500 border-opacity-30">
-                <span className="text-2xl">📍</span>
-                <h3 className="font-heading font-bold text-lg text-primary-300">Location Info</h3>
-              </div>
-              
-              {/* Coordinates */}
-              <div className="space-y-2.5 mb-3">
-                <div className="flex items-start gap-3 bg-gray-800 bg-opacity-40 rounded-lg p-2.5 border border-green-500 border-opacity-30">
-                  <span className="text-green-400 text-sm font-bold min-w-[75px] font-body">Latitude:</span>
-                  <span className="font-mono text-base text-white font-semibold tracking-tight">{hoverInfo.lat.toFixed(6)}</span>
-                </div>
-                <div className="flex items-start gap-3 bg-gray-800 bg-opacity-40 rounded-lg p-2.5 border border-blue-500 border-opacity-30">
-                  <span className="text-blue-400 text-sm font-bold min-w-[75px] font-body">Longitude:</span>
-                  <span className="font-mono text-base text-white font-semibold tracking-tight">{hoverInfo.lng.toFixed(6)}</span>
-                </div>
-              </div>
-              
-              {/* Address */}
-              <div className="bg-gradient-to-r from-primary-900 to-gray-800 bg-opacity-40 rounded-lg p-3 border-2 border-primary-600 border-opacity-30">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">📌</span>
-                  <div className="text-xs font-bold text-primary-300 uppercase tracking-wider font-body">Address</div>
-                </div>
-                <p className="text-sm text-gray-100 leading-relaxed font-body">{hoverInfo.address}</p>
-              </div>
-              
-              {/* Footer hint */}
-              <div className="mt-3 pt-3 border-t border-gray-700 border-opacity-50 text-center">
-                <div className="flex items-center justify-center gap-2">
-                  <span className="text-yellow-400">💡</span>
-                  <p className="text-xs text-gray-300 font-body font-medium">Click anywhere to add a safety report</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
