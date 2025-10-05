@@ -57,7 +57,9 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
       // Find and notify nearest police for unsafe reports
       if (reportType === 'unsafe') {
         try {
+          console.log('Searching for nearest police station...');
           const policeStation = await findNearestPolice(latitude, longitude);
+          console.log('Police station found:', policeStation);
           
           // Show detailed toast notification
           toast.success(
@@ -82,17 +84,18 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
             ),
             { duration: 6000 }
           );
-        } catch (policeError) {
+        } catch (policeError: any) {
           console.error('Failed to find police station:', policeError);
-          toast.error('⚠️ Report saved but police notification failed');
+          toast.error(`⚠️ Report saved but couldn't find nearby police station`);
         }
       }
 
+      // Reset form
       setDescription('');
       setReportType('safe');
-      setTimeout(() => {
-        onClose();
-      }, 1000);
+      
+      // Close modal - don't close automatically, let user close it
+      onClose();
       
       // Call success callback if provided
       if (onSuccess) {

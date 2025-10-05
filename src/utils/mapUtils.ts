@@ -25,64 +25,85 @@ export async function findNearestPolice(
   lat: number, 
   lng: number
 ): Promise<PoliceStation> {
+  console.log('findNearestPolice called with:', lat, lng);
+  
   // Check if Google Maps is loaded
   if (!window.google || !window.google.maps) {
-    throw new Error('Google Maps API not loaded');
+    console.error('Google Maps not loaded');
+    throw new Error('Google Maps API not loaded. Please refresh the page.');
   }
 
   if (!window.google.maps.places) {
-    throw new Error('Google Maps Places API not loaded');
+    console.error('Google Places API not loaded');
+    throw new Error('Google Places API not loaded. Please check your API key.');
   }
 
   return new Promise((resolve, reject) => {
-    const service = new google.maps.places.PlacesService(
-      document.createElement('div')
-    );
+    try {
+      const service = new google.maps.places.PlacesService(
+        document.createElement('div')
+      );
 
-    const userLocation = new google.maps.LatLng(lat, lng);
+      const userLocation = new google.maps.LatLng(lat, lng);
 
-    const request: google.maps.places.PlaceSearchRequest = {
-      location: userLocation,
-      radius: 5000, // 5km radius
-      keyword: 'police station',
-      type: 'police',
-    };
+      const request: google.maps.places.PlaceSearchRequest = {
+        location: userLocation,
+        radius: 5000, // 5km radius
+        keyword: 'police station',
+        type: 'police',
+      };
 
-    service.nearbySearch(request, (results, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
-        const nearest = results[0];
+      console.log('Making Places API request...');
+
+      service.nearbySearch(request, (results, status) => {
+        console.log('Places API response:', status, results);
         
-        // Calculate distance using Haversine formula via Google Maps
-        let distance = 0;
-        if (nearest.geometry?.location) {
-          if (window.google.maps.geometry?.spherical) {
-            distance = Math.round(
-              window.google.maps.geometry.spherical.computeDistanceBetween(
-                userLocation,
-                nearest.geometry.location
-              )
-            );
+        if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
+          const nearest = results[0];
+          
+          // Calculate distance using Haversine formula via Google Maps
+          let distance = 0;
+          if (nearest.geometry?.location) {
+            try {
+              if (window.google.maps.geometry?.spherical) {
+                distance = Math.round(
+                  window.google.maps.geometry.spherical.computeDistanceBetween(
+                    userLocation,
+                    nearest.geometry.location
+                  )
+                );
+              } else {
+                console.warn('Google Maps Geometry library not loaded, distance will be 0');
+              }
+            } catch (err) {
+              console.warn('Error calculating distance:', err);
+            }
           }
+
+          const policeStation: PoliceStation = {
+            name: nearest.name || 'Unknown Police Station',
+            address: nearest.vicinity || 'Address not available',
+            distance: distance,
+            location: {
+              lat: nearest.geometry?.location?.lat() || lat,
+              lng: nearest.geometry?.location?.lng() || lng,
+            },
+            phone: nearest.formatted_phone_number,
+            rating: nearest.rating,
+            placeId: nearest.place_id,
+          };
+
+          console.log('Police station found:', policeStation);
+          resolve(policeStation);
+        } else {
+          console.error('No police stations found. Status:', status);
+          reject(new Error(`No police stations found nearby. Status: ${status}`));
         }
-
-        const policeStation: PoliceStation = {
-          name: nearest.name || 'Unknown Police Station',
-          address: nearest.vicinity || 'Address not available',
-          distance: distance,
-          location: {
-            lat: nearest.geometry?.location?.lat() || lat,
-            lng: nearest.geometry?.location?.lng() || lng,
-          },
-          phone: nearest.formatted_phone_number,
-          rating: nearest.rating,
-          placeId: nearest.place_id,
-        };
-
-        resolve(policeStation);
-      } else {
-        reject(new Error(`No police stations found nearby. Status: ${status}`));
-      }
-    });
+      });
+    } catch (error) {
+      console.error('Error in findNearestPolice:', error);
+      reject(error);
+    }
   });
 }
 
