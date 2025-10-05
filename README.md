@@ -9,10 +9,10 @@ A community-driven safety mapping application where verified users can report an
 
 ## 📸 Screenshots
 
-![Home Page](docs/screenshot-home.png)
+![Home Page]
 *Interactive dashboard showing safety statistics and recent reports*
 
-![Safety Map](docs/screenshot-map.png)
+![Safety Map]
 *Real-time safety map with color-coded markers*
 
 ## 🎯 Problem Statement
@@ -711,6 +711,6 @@ If you find this project helpful, please consider giving it a ⭐ on GitHub!
 
 **[Report Bug](https://github.com/DZ1shetty/Chill-Dev/issues)** • **[Request Feature](https://github.com/DZ1shetty/Chill-Dev/issues)** • **[Documentation](./ENVIRONMENT_SETUP.md)**
 
-Made by [DZ1shetty](https://github.com/DZ1shetty)
+Made by Chill-Dev
 
 </div>
