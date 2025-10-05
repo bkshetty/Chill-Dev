@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, MapPin, AlertTriangle, Shield, Send } from 'lucide-react';
 import { addReport } from '../../firebase/firestore';
+import { Report } from '../../firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
 import { findNearestPolice, formatDistance } from '../../utils/mapUtils';
 import toast from 'react-hot-toast';
@@ -47,10 +48,11 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
         latitude,
         longitude,
         userId: user.uid,
-        userDisplayName: userProfile.displayName
+        userDisplayName: userProfile.displayName || user.displayName || 'Anonymous' // Fallback for safety
       });
 
       toast.success('Report added successfully!');
+      console.log('Report added:', { type: reportType, latitude, longitude }); // Optional: Debug log
 
       // Find and notify nearest police for unsafe reports
       if (reportType === 'unsafe') {
@@ -97,6 +99,7 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
         onSuccess();
       }
     } catch (error: any) {
+      console.error('Add report error:', error); // Optional: More specific logging
       toast.error(error.message || 'Failed to add report');
     } finally {
       setLoading(false);

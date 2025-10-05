@@ -1,50 +1,39 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users collection - users can read/write their own profile
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-      allow read: if request.auth != null; // Allow reading other users' profiles for display purposes
-    }
-    
-    // Reports collection
+
+    // Reports collection rules
     match /reports/{reportId} {
-      // Anyone can read reports (public safety information)
+      // Allow anyone to read reports (public safety data)
       allow read: if true;
-      
-      // Any authenticated user can create reports
-      allow create: if request.auth != null 
+
+      // Allow authenticated users to create new reports
+      allow create: if request.auth != null
         && request.auth.uid != null
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
-        && request.resource.data.keys().hasAll(['type', 'description', 'latitude', 'longitude', 'userId', 'userDisplayName', 'createdAt', 'updatedAt'])
-        && request.resource.data.type in ['safe', 'unsafe']
-        && request.resource.data.description is string
-        && request.resource.data.description.size() > 0
-        && request.resource.data.description.size() <= 1000
-        && request.resource.data.latitude is number
-        && request.resource.data.longitude is number
-        && request.resource.data.userId == request.auth.uid
-        && request.resource.data.userDisplayName is string
-        && request.resource.data.createdAt is timestamp
-        && request.resource.data.updatedAt is timestamp;
-      
-      // Only the report author can update their own reports
-      allow update: if request.auth != null 
+        && request.resource.data.userId == request.auth.uid  // user owns it
+        && request.resource.data.createdAt is timestamp;      // valid server timestamp type
+
+      // Allow only the owner to update their report
+      allow update: if request.auth != null
         && request.auth.uid == resource.data.userId
-        && request.resource.data.keys().hasAll(['type', 'description', 'latitude', 'longitude', 'userId', 'userDisplayName', 'createdAt', 'updatedAt'])
-        && request.resource.data.type in ['safe', 'unsafe']
-        && request.resource.data.description is string
-        && request.resource.data.description.size() > 0
-        && request.resource.data.description.size() <= 1000
-        && request.resource.data.latitude is number
-        && request.resource.data.longitude is number
         && request.resource.data.userId == request.auth.uid
-        && request.resource.data.userDisplayName is string
-        && request.resource.data.createdAt == resource.data.createdAt // Prevent modification of creation timestamp
         && request.resource.data.updatedAt is timestamp;
-      
-      // Only the report author can delete their own reports
-      allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
+
+      // Allow only the owner to delete their report
+      allow delete: if request.auth != null
+        && request.auth.uid == resource.data.userId;
+    }
+
+    // Users collection rules (for profiles)
+    match /users/{userId} {
+      // Allow read if authenticated and own the profile
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // Allow create/update only for the owner
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+
+      // No deletes for users
+      allow delete: if false;
     }
   }
 }

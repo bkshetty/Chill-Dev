@@ -33,6 +33,7 @@ export const addReport = async (report: Omit<Report, 'id' | 'createdAt' | 'updat
     });
     return docRef.id;
   } catch (error) {
+    console.error('Add report error:', error);
     throw error;
   }
 };
@@ -42,13 +43,17 @@ export const getReports = async (): Promise<Report[]> => {
     const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(q);
     
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt.toDate(),
-      updatedAt: doc.data().updatedAt.toDate()
-    })) as Report[];
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: data.createdAt.toDate(),
+        updatedAt: data.updatedAt.toDate()
+      } as Report;
+    });
   } catch (error) {
+    console.error('Get reports error:', error);
     throw error;
   }
 };
@@ -61,6 +66,7 @@ export const updateReport = async (reportId: string, updates: Partial<Report>): 
       updatedAt: Timestamp.now()
     });
   } catch (error) {
+    console.error('Update report error:', error);
     throw error;
   }
 };
@@ -69,26 +75,35 @@ export const deleteReport = async (reportId: string): Promise<void> => {
   try {
     await deleteDoc(doc(db, 'reports', reportId));
   } catch (error) {
+    console.error('Delete report error:', error);
     throw error;
   }
 };
 
 export const getUserReports = async (userId: string): Promise<Report[]> => {
   try {
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
     const q = query(
       collection(db, 'reports'),
       where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
+      orderBy('createdAt', 'desc') //later needed
     );
     const querySnapshot = await getDocs(q);
     
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt.toDate(),
-      updatedAt: doc.data().updatedAt.toDate()
-    })) as Report[];
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: data.createdAt.toDate(),
+        updatedAt: data.updatedAt.toDate()
+      } as Report;
+    });
   } catch (error) {
+    console.error('Get user reports error:', error);
     throw error;
   }
 };
+
