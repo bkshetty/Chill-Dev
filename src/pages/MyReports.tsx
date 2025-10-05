@@ -18,10 +18,12 @@ const MyReports: React.FC = () => {
 
   const fetchReports = async () => {
     if (!user) return;
+    
 
     try {
       const userReports = await getUserReports(user.uid);
       setReports(userReports);
+      console.log('Loaded reports:', userReports); // Optional: Debug log
     } catch (error) {
       console.error('Error fetching user reports:', error);
       toast.error('Failed to load your reports');
@@ -40,6 +42,7 @@ const MyReports: React.FC = () => {
       setReports(reports.filter(report => report.id !== reportId));
       toast.success('Report deleted successfully');
     } catch (error: any) {
+      console.error('Delete error:', error); // Optional: More specific logging
       toast.error(error.message || 'Failed to delete report');
     }
   };
