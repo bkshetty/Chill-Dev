@@ -29,34 +29,34 @@ const Map: React.FC = () => {
     <div className="w-full h-full">
       <div className="w-full h-full flex flex-col">
         {/* Header */}
-        <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200/50 p-4">
+        <div className="glass backdrop-blur-sm shadow-sm border-b border-gray-700 p-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Safety Map</h1>
-              <p className="text-gray-600">View and contribute to community safety reports</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Safety Map</h1>
+              <p className="text-gray-300 text-sm md:text-base mt-1">View and contribute to real-time community safety reports</p>
             </div>
             
             <div className="flex items-center space-x-3">
               {user && (
                 <button
                   onClick={() => setShowAddReportModal(true)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+                  className="flex items-center space-x-2 px-4 md:px-5 py-2.5 bg-primary-600 text-white rounded-xl hover:bg-primary-700 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md"
                 >
                   <Plus className="w-4 h-4" />
-                  <span className="font-medium">Add Report</span>
+                  <span className="font-semibold hidden sm:inline">Add Report</span>
                 </button>
               )}
               
               <button
                 onClick={() => setShowRoutePlanning(!showRoutePlanning)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 ${
+                className={`flex items-center space-x-2 px-4 md:px-5 py-2.5 rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 ${
                   showRoutePlanning
                     ? 'bg-primary-600 text-white shadow-lg'
-                    : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-md border border-gray-200/50'
+                    : 'glass text-gray-200 hover:bg-dark-700 hover:shadow-md border border-gray-600'
                 }`}
               >
                 <Route className="w-4 h-4" />
-                <span className="font-medium">Route Planning</span>
+                <span className="font-semibold hidden sm:inline">Route Planning</span>
               </button>
             </div>
           </div>
@@ -64,39 +64,39 @@ const Map: React.FC = () => {
 
         {/* Route Planning Panel */}
         {showRoutePlanning && (
-          <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 p-4 animate-fadeIn">
+          <div className="glass backdrop-blur-sm border-b border-gray-700 p-4 animate-fadeIn">
             <div className="max-w-7xl mx-auto">
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-col md:flex-row md:items-center md:space-x-6 space-y-3 md:space-y-0">
                 <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-blue-600" />
-                  <span className="text-sm font-medium">Start Point:</span>
+                  <MapPin className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                  <span className="text-sm font-semibold text-white whitespace-nowrap">Start Point:</span>
                   {startPoint ? (
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-300 font-mono">
                       {startPoint[0].toFixed(4)}, {startPoint[1].toFixed(4)}
                     </span>
                   ) : (
-                    <span className="text-sm text-gray-400">Click on map to select</span>
+                    <span className="text-sm text-gray-400 italic">Click on map to select</span>
                   )}
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-purple-600" />
-                  <span className="text-sm font-medium">End Point:</span>
+                  <MapPin className="w-5 h-5 text-purple-400 flex-shrink-0" />
+                  <span className="text-sm font-semibold text-white whitespace-nowrap">End Point:</span>
                   {endPoint ? (
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-300 font-mono">
                       {endPoint[0].toFixed(4)}, {endPoint[1].toFixed(4)}
                     </span>
                   ) : (
-                    <span className="text-sm text-gray-400">Click on map to select</span>
+                    <span className="text-sm text-gray-400 italic">Click on map to select</span>
                   )}
                 </div>
 
                 {(startPoint || endPoint) && (
                   <button
                     onClick={clearRoute}
-                    className="text-sm text-gray-500 hover:text-gray-700"
+                    className="text-sm text-gray-400 hover:text-white font-medium transition-colors md:ml-auto"
                   >
-                    Clear
+                    Clear Route
                   </button>
                 )}
               </div>
@@ -112,26 +112,26 @@ const Map: React.FC = () => {
           />
 
           {/* Legend */}
-          <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-3">Legend</h3>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 bg-safe-500 rounded-full"></div>
-                <span className="text-sm text-gray-700">Safe Area</span>
+          <div className="glass-card rounded-lg shadow-lg p-5 absolute bottom-4 left-4 z-10">
+            <h3 className="font-bold text-white mb-4 text-base tracking-tight">Map Legend</h3>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3">
+                <div className="w-4 h-4 bg-safe-600 rounded-full shadow-sm"></div>
+                <span className="text-sm text-gray-200 font-medium">Safe Area</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 bg-unsafe-500 rounded-full"></div>
-                <span className="text-sm text-gray-700">Unsafe Area</span>
+              <div className="flex items-center space-x-3">
+                <div className="w-4 h-4 bg-unsafe-600 rounded-full shadow-sm"></div>
+                <span className="text-sm text-gray-200 font-medium">Unsafe Area</span>
               </div>
               {showRoutePlanning && (
                 <>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm text-gray-700">Start Point</span>
+                  <div className="flex items-center space-x-3 pt-2 mt-2 border-t border-gray-700">
+                    <div className="w-4 h-4 bg-blue-500 rounded-full shadow-sm"></div>
+                    <span className="text-sm text-gray-200 font-medium">Start Point</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
-                    <span className="text-sm text-gray-700">End Point</span>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-purple-500 rounded-full shadow-sm"></div>
+                    <span className="text-sm text-gray-200 font-medium">End Point</span>
                   </div>
                 </>
               )}
@@ -140,13 +140,13 @@ const Map: React.FC = () => {
 
           {/* Instructions */}
           {!user && (
-            <div className="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-4 max-w-xs">
-              <div className="flex items-center space-x-2 text-gray-600 mb-2">
-                <Navigation className="w-5 h-5 text-primary-600" />
-                <span className="font-medium">Get Started</span>
+            <div className="glass-card rounded-lg shadow-lg p-5 max-w-xs absolute top-4 right-4 z-10">
+              <div className="flex items-center space-x-3 text-gray-300 mb-3">
+                <Navigation className="w-6 h-6 text-primary-400 flex-shrink-0" />
+                <span className="font-bold text-white text-base">Get Started</span>
               </div>
-              <p className="text-sm text-gray-600">
-                Sign up to contribute safety reports and help build safer communities.
+              <p className="text-sm text-gray-300 leading-relaxed">
+                Sign up to contribute safety reports and help build safer communities for everyone.
               </p>
             </div>
           )}

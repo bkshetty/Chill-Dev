@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { db, GOOGLE_MAPS_API_KEY } from '../../firebase/config';
 import { Report } from '../../firebase/firestore';
 import { Locate } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-// Google Maps API key
-const GOOGLE_MAPS_API_KEY = 'AIzaSyAI9xG8wgT5IPwPGkVtSRZ0O7sqdSsVF9Q';
 
 // Custom marker icons
 const createMarkerIcon = (type: 'safe' | 'unsafe' | 'current') => {
@@ -274,7 +271,13 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
           </div>
         );
       default:
-        return null;
+        return (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-gray-600">Initializing map...</p>
+            </div>
+          </div>
+        );
     }
   };
 

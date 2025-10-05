@@ -8,14 +8,20 @@ import AddReport from './pages/AddReport';
 import MyReports from './pages/MyReports';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
+import { motion } from 'framer-motion';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="w-full h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-auto">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="w-full min-h-screen bg-dark-900 text-white overflow-hidden"
+        >
           <Navbar />
-          <main className="w-full h-full pt-14">
+          <main className="w-full h-full pt-16">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/map" element={<Map />} />
@@ -30,26 +36,29 @@ function App() {
             toastOptions={{
               duration: 4000,
               style: {
-                background: '#363636',
+                background: '#2D2D44',
                 color: '#fff',
+                border: '1px solid #3E3E5B',
+                borderRadius: '12px',
+                backdropFilter: 'blur(4px)',
               },
               success: {
                 duration: 3000,
                 iconTheme: {
-                  primary: '#22c55e',
+                  primary: '#10B981',
                   secondary: '#fff',
                 },
               },
               error: {
                 duration: 5000,
                 iconTheme: {
-                  primary: '#ef4444',
+                  primary: '#EF4444',
                   secondary: '#fff',
                 },
               },
             }}
           />
-        </div>
+        </motion.div>
       </Router>
     </AuthProvider>
   );

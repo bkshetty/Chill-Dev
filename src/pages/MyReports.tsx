@@ -56,67 +56,67 @@ const MyReports: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your reports...</p>
+          <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-300 text-lg font-medium">Loading your reports...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Reports</h1>
-          <p className="text-gray-600">Manage your safety reports and contributions to the community</p>
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">My Reports</h1>
+          <p className="text-gray-300 text-base md:text-lg">Manage your safety reports and contributions to the community</p>
         </div>
 
         {reports.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-            <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">No Reports Yet</h2>
-            <p className="text-gray-600 mb-6">
-              You haven't added any safety reports yet. Start contributing to help make your community safer.
+          <div className="glass-card rounded-xl shadow-lg p-12 text-center">
+            <Shield className="w-20 h-20 text-gray-400 mx-auto mb-6" />
+            <h2 className="text-2xl font-bold text-white mb-3">No Reports Yet</h2>
+            <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md mx-auto">
+              You haven't added any safety reports yet. Start contributing to help make your community safer for everyone.
             </p>
             <a
               href="/add-report"
-              className="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors"
+              className="inline-flex items-center justify-center px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               <Shield className="w-5 h-5 mr-2" />
-              Add Your First Report
+              <span>Add Your First Report</span>
             </a>
           </div>
         ) : (
           <div className="space-y-6">
             {reports.map((report) => (
-              <div key={report.id} className="bg-white rounded-xl shadow-lg p-6">
+              <div key={report.id} className="glass-card rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-3">
+                    <div className="flex items-center space-x-3 mb-4">
                       {report.type === 'safe' ? (
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 bg-safe-100 px-4 py-2 rounded-lg">
                           <Shield className="w-5 h-5 text-safe-600" />
-                          <span className="font-semibold text-safe-700">Safe Area</span>
+                          <span className="font-bold text-safe-600 tracking-wide">SAFE AREA</span>
                         </div>
                       ) : (
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 bg-unsafe-100 px-4 py-2 rounded-lg">
                           <AlertTriangle className="w-5 h-5 text-unsafe-600" />
-                          <span className="font-semibold text-unsafe-700">Unsafe Area</span>
+                          <span className="font-bold text-unsafe-600 tracking-wide">UNSAFE AREA</span>
                         </div>
                       )}
                     </div>
 
-                    <p className="text-gray-700 mb-4">{report.description}</p>
+                    <p className="text-gray-200 mb-5 leading-relaxed text-base">{report.description}</p>
 
-                    <div className="flex items-center space-x-6 text-sm text-gray-500">
-                      <div className="flex items-center space-x-1">
-                        <MapPin className="w-4 h-4" />
-                        <span>{report.latitude.toFixed(4)}, {report.longitude.toFixed(4)}</span>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0 text-sm text-gray-400">
+                      <div className="flex items-center space-x-2">
+                        <MapPin className="w-4 h-4 flex-shrink-0" />
+                        <span className="font-mono">{report.latitude.toFixed(4)}, {report.longitude.toFixed(4)}</span>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="w-4 h-4 flex-shrink-0" />
                         <span>{formatDate(report.createdAt)}</span>
                       </div>
                     </div>
@@ -125,10 +125,10 @@ const MyReports: React.FC = () => {
                   <div className="flex items-center space-x-2 ml-4">
                     <button
                       onClick={() => handleDeleteReport(report.id!)}
-                      className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                       title="Delete report"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
@@ -139,33 +139,33 @@ const MyReports: React.FC = () => {
 
         {/* Stats */}
         {reports.length > 0 && (
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Shield className="w-6 h-6 text-blue-600" />
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="glass-card rounded-xl shadow-lg p-8 text-center hover:shadow-xl transition-shadow">
+              <div className="w-14 h-14 bg-safe-100 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <Shield className="w-7 h-7 text-safe-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">
+              <h3 className="text-3xl font-bold text-white mb-2">
                 {reports.filter(r => r.type === 'safe').length}
               </h3>
-              <p className="text-gray-600">Safe Areas Reported</p>
+              <p className="text-gray-300 font-medium text-sm tracking-wide uppercase">Safe Areas Reported</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
+            <div className="glass-card rounded-xl shadow-lg p-8 text-center hover:shadow-xl transition-shadow">
+              <div className="w-14 h-14 bg-unsafe-100 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <AlertTriangle className="w-7 h-7 text-unsafe-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">
+              <h3 className="text-3xl font-bold text-white mb-2">
                 {reports.filter(r => r.type === 'unsafe').length}
               </h3>
-              <p className="text-gray-600">Unsafe Areas Reported</p>
+              <p className="text-gray-300 font-medium text-sm tracking-wide uppercase">Unsafe Areas Reported</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Calendar className="w-6 h-6 text-primary-600" />
+            <div className="glass-card rounded-xl shadow-lg p-8 text-center hover:shadow-xl transition-shadow">
+              <div className="w-14 h-14 bg-primary-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <Calendar className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">{reports.length}</h3>
-              <p className="text-gray-600">Total Reports</p>
+              <h3 className="text-3xl font-bold text-white mb-2">{reports.length}</h3>
+              <p className="text-gray-300 font-medium text-sm tracking-wide uppercase">Total Reports</p>
             </div>
           </div>
         )}

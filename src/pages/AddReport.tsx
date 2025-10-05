@@ -33,45 +33,46 @@ const AddReport: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-full bg-gray-50">
+    <div className="w-full h-full">
       <div className="w-full h-full flex flex-col">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-200 p-4">
+        <div className="glass shadow-sm border-b border-gray-700 p-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => navigate('/map')}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors group"
               >
-                <ArrowLeft className="w-4 h-4" />
-                <span>Back to Map</span>
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span className="font-medium">Back to Map</span>
               </button>
+              <div className="hidden sm:block w-px h-8 bg-gray-700"></div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Add Safety Report</h1>
-                <p className="text-gray-600">Click on the map to add a safety report</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Add Safety Report</h1>
+                <p className="text-gray-300 text-sm md:text-base mt-1">Click on the map to add a safety report for your community</p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-2 px-3 py-2 bg-primary-100 rounded-lg">
-              <Shield className="w-4 h-4 text-primary-600" />
-              <span className="text-sm font-medium text-primary-700">Community Member</span>
+            <div className="flex items-center space-x-2 px-4 py-2.5 bg-primary-600 rounded-lg shadow-md">
+              <Shield className="w-5 h-5 text-white" />
+              <span className="text-sm font-semibold text-white hidden sm:inline">Community Member</span>
             </div>
           </div>
         </div>
 
         {/* Instructions */}
-        <div className="bg-primary-50 border-b border-primary-200 p-4">
+        <div className="bg-gradient-to-r from-primary-900/30 to-primary-800/30 border-b border-primary-700/50 p-4">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-start space-x-3">
-              <Plus className="w-5 h-5 text-primary-600 mt-0.5" />
+            <div className="flex items-start space-x-4">
+              <Plus className="w-6 h-6 text-primary-400 mt-0.5 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-primary-900 mb-1">How to Add a Report</h3>
-                <p className="text-sm text-primary-700">
-                  1. Click anywhere on the map to select a location<br/>
-                  2. Choose whether the area is safe or unsafe<br/>
-                  3. Provide a detailed description of why<br/>
-                  4. Submit your report to help the community
-                </p>
+                <h3 className="font-bold text-white mb-2 text-base">How to Add a Report</h3>
+                <div className="text-sm text-gray-300 leading-relaxed space-y-1">
+                  <p><span className="font-semibold text-primary-300">1.</span> Click anywhere on the map to select a specific location</p>
+                  <p><span className="font-semibold text-primary-300">2.</span> Choose whether the area is safe or unsafe based on your experience</p>
+                  <p><span className="font-semibold text-primary-300">3.</span> Provide a detailed description explaining why (be specific and factual)</p>
+                  <p><span className="font-semibold text-primary-300">4.</span> Submit your report to help make your community safer</p>
+                </div>
               </div>
             </div>
           </div>
@@ -85,28 +86,40 @@ const AddReport: React.FC = () => {
           />
 
           {/* Legend */}
-          <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-3">Legend</h3>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Shield className="w-4 h-4 text-safe-600" />
-                <span className="text-sm text-gray-700">Safe Area</span>
+          <div className="glass-card rounded-lg shadow-lg p-5 absolute bottom-4 left-4 z-10">
+            <h3 className="font-bold text-white mb-4 text-base tracking-tight">Map Legend</h3>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3">
+                <Shield className="w-5 h-5 text-safe-600 flex-shrink-0" />
+                <span className="text-sm text-gray-200 font-medium">Safe Area</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <AlertTriangle className="w-4 h-4 text-unsafe-600" />
-                <span className="text-sm text-gray-700">Unsafe Area</span>
+              <div className="flex items-center space-x-3">
+                <AlertTriangle className="w-5 h-5 text-unsafe-600 flex-shrink-0" />
+                <span className="text-sm text-gray-200 font-medium">Unsafe Area</span>
               </div>
             </div>
           </div>
 
           {/* Tips */}
-          <div className="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-4 max-w-sm">
-            <h3 className="font-semibold text-gray-900 mb-2">Tips for Good Reports</h3>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Be specific about what makes an area safe/unsafe</li>
-              <li>• Include details about lighting, foot traffic, etc.</li>
-              <li>• Mention time of day if relevant</li>
-              <li>• Focus on factual observations</li>
+          <div className="glass-card rounded-lg shadow-lg p-5 max-w-sm absolute top-4 right-4 z-10">
+            <h3 className="font-bold text-white mb-4 text-base tracking-tight">Tips for Quality Reports</h3>
+            <ul className="text-sm text-gray-300 space-y-2.5 leading-relaxed">
+              <li className="flex items-start">
+                <span className="text-primary-400 mr-2 mt-0.5 flex-shrink-0">•</span>
+                <span>Be specific about what makes an area safe or unsafe</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-primary-400 mr-2 mt-0.5 flex-shrink-0">•</span>
+                <span>Include details about lighting, foot traffic, and visibility</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-primary-400 mr-2 mt-0.5 flex-shrink-0">•</span>
+                <span>Mention time of day if it affects the safety assessment</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-primary-400 mr-2 mt-0.5 flex-shrink-0">•</span>
+                <span>Focus on factual observations, not assumptions</span>
+              </li>
             </ul>
           </div>
         </div>
