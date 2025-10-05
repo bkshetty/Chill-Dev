@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, MapPin, AlertTriangle, Shield, Send } from 'lucide-react';
 import { addReport } from '../../firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
-import { findNearestPolice } from '../../utils/mapUtils';
+import { findNearestPolice, formatDistance } from '../../utils/mapUtils';
 import toast from 'react-hot-toast';
 
 interface AddReportModalProps {
@@ -52,11 +52,34 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
 
       toast.success('Report added successfully!');
 
-      // Send to police for unsafe reports
+      // Find and notify nearest police for unsafe reports
       if (reportType === 'unsafe') {
         try {
           const policeStation = await findNearestPolice(latitude, longitude);
-          toast.success(`🚔 Report forwarded to: ${policeStation}`);
+          
+          // Show detailed toast notification
+          toast.success(
+            () => (
+              <div className="space-y-2">
+                <div className="font-bold text-blue-600">🚔 Nearest Police Station</div>
+                <div className="text-sm">
+                  <strong>{policeStation.name}</strong>
+                </div>
+                <div className="text-xs text-gray-600">
+                  📍 {formatDistance(policeStation.distance)} away
+                </div>
+                <div className="text-xs text-gray-500">
+                  {policeStation.address}
+                </div>
+                {policeStation.phone && (
+                  <div className="text-xs text-gray-600">
+                    📞 {policeStation.phone}
+                  </div>
+                )}
+              </div>
+            ),
+            { duration: 6000 }
+          );
         } catch (policeError) {
           console.error('Failed to find police station:', policeError);
           toast.error('⚠️ Report saved but police notification failed');
@@ -65,7 +88,9 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
 
       setDescription('');
       setReportType('safe');
-      onClose();
+      setTimeout(() => {
+        onClose();
+      }, 1000);
       
       // Call success callback if provided
       if (onSuccess) {
