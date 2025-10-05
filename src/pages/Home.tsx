@@ -71,16 +71,16 @@ const Home: React.FC = () => {
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-tight">
-              Safe Route
+            <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-tight">
+              SAFE STREE
             </h1>
-            <p className="text-lg md:text-xl lg:text-2xl mb-10 text-primary-50 leading-relaxed max-w-3xl mx-auto">
+            <p className="font-body text-xl md:text-2xl lg:text-2xl mb-10 text-primary-50 leading-relaxed max-w-3xl mx-auto font-normal">
               Building safer communities through crowd-sourced safety awareness and real-time incident reporting
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
                 to="/map"
-                className="inline-flex items-center justify-center px-8 py-4 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 border border-white/20 min-w-[200px]"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 border border-white/20 min-w-[200px] text-base tracking-wide"
               >
                 <Map className="w-5 h-5 mr-2" />
                 <span>View Safety Map</span>
@@ -88,7 +88,7 @@ const Home: React.FC = () => {
               </Link>
               <Link
                 to="/add-report"
-                className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 font-semibold rounded-xl hover:bg-white/90 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 min-w-[200px]"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 font-semibold rounded-xl hover:bg-white/90 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 min-w-[200px] text-base tracking-wide"
               >
                 <Shield className="w-5 h-5 mr-2" />
                 <span>Add Safety Report</span>
@@ -101,8 +101,8 @@ const Home: React.FC = () => {
       {/* Stats Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">Community Impact</h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Community Impact</h2>
+          <p className="font-body text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Real-time safety data contributed by verified community members helping to create safer neighborhoods
           </p>
         </div>
@@ -113,8 +113,8 @@ const Home: React.FC = () => {
               <div className={`w-14 h-14 ${stat.bgColor} rounded-xl flex items-center justify-center mx-auto mb-5 transition-all duration-300 hover:scale-110`}>
                 <stat.icon className={`w-7 h-7 ${stat.color}`} />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">{stat.value}</h3>
-              <p className="text-gray-300 font-medium text-sm tracking-wide uppercase">{stat.title}</p>
+              <h3 className="font-heading text-4xl font-bold text-white mb-2">{stat.value}</h3>
+              <p className="font-body text-gray-300 font-medium text-sm tracking-wide uppercase">{stat.title}</p>
             </div>
           ))}
         </div>
@@ -122,15 +122,15 @@ const Home: React.FC = () => {
         {/* Features Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 tracking-tight">How It Works</h2>
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-8 tracking-tight">How It Works</h2>
             <div className="space-y-8">
               <div className="flex items-start space-x-5">
                 <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                   <span className="text-white font-bold text-lg">1</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-3">Real-Time Map Updates</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h3 className="font-heading text-xl font-semibold text-white mb-3">Real-Time Map Updates</h3>
+                  <p className="font-body text-gray-300 leading-relaxed text-base">
                     View safe and unsafe areas on an interactive map with detailed descriptions, user-verified information, and real-time timestamps for accurate community awareness.
                   </p>
                 </div>
@@ -140,8 +140,8 @@ const Home: React.FC = () => {
                   <span className="text-white font-bold text-lg">2</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-3">Instant Police Station Alerts</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h3 className="font-heading text-xl font-semibold text-white mb-3">Instant Police Station Alerts</h3>
+                  <p className="font-body text-gray-300 leading-relaxed text-base">
                     Critical unsafe area reports are automatically forwarded to the nearest police station, enabling rapid response and proactive community safety measures.
                   </p>
                 </div>

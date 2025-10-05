@@ -59,110 +59,53 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
 
       const infoWindow = new google.maps.InfoWindow({
         content: `
-          <div style="padding: 12px; min-width: 280px; max-width: 350px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-            <!-- Header -->
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid ${report.type === 'safe' ? '#dcfce7' : '#fee2e2'};">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 24px;">
-                  ${report.type === 'safe' ? '🛡️' : '⚠️'}
-                </span>
-                <div>
-                  <div style="font-weight: 600; font-size: 16px; color: ${report.type === 'safe' ? '#16a34a' : '#dc2626'};">
-                    ${report.type === 'safe' ? 'Safe Area' : 'Unsafe Area'}
+          <div style="font-family: Arial, sans-serif; max-width: 320px; padding: 0;">
+            <div style="background: ${report.type === 'safe' ? 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)' : 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)'}; color: white; padding: 16px; border-radius: 8px 8px 0 0; margin: -10px -10px 0 -10px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <span style="font-size: 28px;">${report.type === 'safe' ? '🛡️' : '⚠️'}</span>
+                <div style="flex: 1;">
+                  <div style="font-size: 18px; font-weight: bold;">
+                    ${report.type === 'safe' ? 'SAFE AREA' : 'UNSAFE AREA'}
                   </div>
-                  <div style="font-size: 11px; color: #9ca3af; margin-top: 2px;">
+                  <div style="font-size: 11px; opacity: 0.9;">
                     Report #${report.id ? report.id.slice(-6).toUpperCase() : 'N/A'}
                   </div>
                 </div>
               </div>
-              <div style="background: ${report.type === 'safe' ? '#dcfce7' : '#fee2e2'}; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; color: ${report.type === 'safe' ? '#16a34a' : '#dc2626'};">
-                ${report.type.toUpperCase()}
-              </div>
             </div>
             
-            <!-- Description -->
-            <div style="margin-bottom: 12px;">
-              <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
-                📝 Description
-              </div>
-              <p style="color: #374151; font-size: 14px; line-height: 1.5; margin: 0; padding: 8px; background: #f9fafb; border-radius: 6px; border-left: 3px solid ${report.type === 'safe' ? '#22c55e' : '#ef4444'};">
-                ${report.description}
-              </p>
-            </div>
-            
-            <!-- Report Details -->
-            <div style="background: #f9fafb; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-              <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
-                ℹ️ Report Details
+            <div style="padding: 16px; background: white;">
+              <div style="margin-bottom: 14px;">
+                <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 6px;">📝 DESCRIPTION</div>
+                <div style="padding: 10px; background: #f8f9fa; border-left: 4px solid ${report.type === 'safe' ? '#22c55e' : '#ef4444'}; border-radius: 4px; font-size: 14px; line-height: 1.5;">
+                  ${report.description}
+                </div>
               </div>
               
-              <div style="display: grid; gap: 6px;">
-                <!-- Reporter -->
-                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
-                  <span style="color: #3b82f6;">👤</span>
-                  <div style="flex: 1;">
-                    <span style="color: #6b7280; font-size: 11px;">Reported by:</span>
-                    <div style="color: #1f2937; font-weight: 500;">${report.userDisplayName}</div>
-                  </div>
+              <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <div style="margin-bottom: 10px;">
+                  <div style="font-size: 11px; color: #666; margin-bottom: 2px;">👤 Reported by</div>
+                  <div style="font-size: 14px; font-weight: bold; color: #333;">${report.userDisplayName}</div>
                 </div>
-                
-                <!-- Date & Time -->
-                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
-                  <span style="color: #8b5cf6;">🕒</span>
-                  <div style="flex: 1;">
-                    <span style="color: #6b7280; font-size: 11px;">Reported on:</span>
-                    <div style="color: #1f2937; font-weight: 500;">${formatDate(report.createdAt)}</div>
-                  </div>
+                <div style="margin-bottom: 10px;">
+                  <div style="font-size: 11px; color: #666; margin-bottom: 2px;">🕒 Date & Time</div>
+                  <div style="font-size: 13px; color: #333;">${formatDate(report.createdAt)}</div>
                 </div>
-                
-                <!-- Location Coordinates -->
-                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
-                  <span style="color: #10b981;">📍</span>
-                  <div style="flex: 1;">
-                    <span style="color: #6b7280; font-size: 11px;">Coordinates:</span>
-                    <div style="color: #1f2937; font-weight: 500; font-family: monospace; font-size: 11px;">
-                      ${report.latitude.toFixed(6)}, ${report.longitude.toFixed(6)}
-                    </div>
+                <div>
+                  <div style="font-size: 11px; color: #666; margin-bottom: 2px;">📍 Location</div>
+                  <div style="font-size: 11px; font-family: monospace; color: #555;">
+                    ${report.latitude.toFixed(6)}, ${report.longitude.toFixed(6)}
                   </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- Safety Tips -->
-            ${report.type === 'unsafe' ? `
-              <div style="background: #fef3c7; border: 1px solid #fbbf24; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
-                <div style="display: flex; align-items: start; gap: 6px;">
-                  <span style="font-size: 14px;">⚠️</span>
-                  <div style="flex: 1;">
-                    <div style="font-size: 11px; font-weight: 600; color: #92400e; margin-bottom: 3px;">
-                      SAFETY ALERT
-                    </div>
-                    <div style="font-size: 11px; color: #78350f; line-height: 1.4;">
-                      Exercise caution in this area. Stay alert and consider alternative routes.
-                    </div>
-                  </div>
+              
+              <div style="background: ${report.type === 'safe' ? '#d1fae5' : '#fee2e2'}; border: 2px solid ${report.type === 'safe' ? '#34d399' : '#fbbf24'}; padding: 10px; border-radius: 6px; text-align: center;">
+                <div style="font-size: 12px; font-weight: bold; color: ${report.type === 'safe' ? '#065f46' : '#92400e'}; margin-bottom: 4px;">
+                  ${report.type === 'safe' ? '✅ VERIFIED SAFE ZONE' : '⚠️ CAUTION REQUIRED'}
                 </div>
-              </div>
-            ` : `
-              <div style="background: #d1fae5; border: 1px solid #34d399; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
-                <div style="display: flex; align-items: start; gap: 6px;">
-                  <span style="font-size: 14px;">✅</span>
-                  <div style="flex: 1;">
-                    <div style="font-size: 11px; font-weight: 600; color: #065f46; margin-bottom: 3px;">
-                      SAFE ZONE
-                    </div>
-                    <div style="font-size: 11px; color: #047857; line-height: 1.4;">
-                      This area has been reported as safe by the community.
-                    </div>
-                  </div>
+                <div style="font-size: 11px; color: ${report.type === 'safe' ? '#047857' : '#78350f'};">
+                  ${report.type === 'safe' ? 'Community verified safe area' : 'Stay alert and consider alternatives'}
                 </div>
-              </div>
-            `}
-            
-            <!-- Footer -->
-            <div style="text-align: center; padding-top: 8px; border-top: 1px solid #e5e7eb;">
-              <div style="font-size: 10px; color: #9ca3af;">
-                💡 Help keep our community safe by reporting areas
               </div>
             </div>
           </div>
@@ -223,41 +166,39 @@ const MapComponent: React.FC<GoogleMapComponentProps> = ({
 
       const infoWindow = new google.maps.InfoWindow({
         content: `
-          <div style="padding: 12px; min-width: 250px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-            <!-- Header -->
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid #dbeafe;">
-              <span style="font-size: 24px;">📍</span>
-              <div style="flex: 1;">
-                <div style="font-weight: 600; font-size: 16px; color: #1e40af;">
-                  Your Current Location
+          <div style="font-family: Arial, sans-serif; max-width: 300px; padding: 0;">
+            <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 16px; border-radius: 8px 8px 0 0; margin: -10px -10px 0 -10px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <span style="font-size: 28px;">📍</span>
+                <div style="flex: 1;">
+                  <div style="font-size: 18px; font-weight: bold;">
+                    YOUR LOCATION
+                  </div>
+                  <div style="font-size: 11px; opacity: 0.9;">
+                    Real-time GPS Position
+                  </div>
                 </div>
-                <div style="font-size: 11px; color: #9ca3af; margin-top: 2px;">
-                  Real-time position
+                <div style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: bold;">
+                  🔴 LIVE
                 </div>
-              </div>
-              <div style="background: #dbeafe; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; color: #1e40af;">
-                LIVE
               </div>
             </div>
             
-            <!-- Coordinates -->
-            <div style="background: #f0f9ff; padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid #3b82f6;">
-              <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
-                📐 Coordinates
+            <div style="padding: 16px; background: white;">
+              <div style="background: #f0f9ff; padding: 12px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 12px;">
+                <div style="font-size: 11px; font-weight: bold; color: #666; margin-bottom: 6px;">📐 COORDINATES</div>
+                <div style="font-family: monospace; font-size: 14px; color: #1f2937; font-weight: bold; margin-bottom: 4px;">
+                  ${lat.toFixed(6)}, ${lng.toFixed(6)}
+                </div>
+                <div style="font-size: 10px; color: #6b7280;">
+                  Latitude, Longitude
+                </div>
               </div>
-              <div style="font-family: monospace; font-size: 13px; color: #1f2937; font-weight: 500;">
-                ${lat.toFixed(6)}, ${lng.toFixed(6)}
-              </div>
-              <div style="font-size: 10px; color: #6b7280; margin-top: 4px;">
-                Latitude, Longitude
-              </div>
-            </div>
-            
-            <!-- Actions -->
-            <div style="background: #f9fafb; padding: 8px; border-radius: 6px;">
-              <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #6b7280;">
-                <span>💡</span>
-                <span>Click anywhere on the map to report safety status</span>
+              
+              <div style="background: #f0fdf4; border: 2px solid #86efac; padding: 10px; border-radius: 6px; text-align: center;">
+                <div style="font-size: 11px; color: #166534; line-height: 1.5;">
+                  💡 <strong>Tip:</strong> Click anywhere on the map to report safety status
+                </div>
               </div>
             </div>
           </div>

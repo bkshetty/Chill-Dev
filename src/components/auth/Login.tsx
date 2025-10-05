@@ -55,8 +55,8 @@ const Login: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">Welcome Back</h1>
-          <p className="text-gray-400 text-base">Sign in to continue to Safe Route and contribute to community safety</p>
+          <h1 className="font-heading text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">Welcome Back</h1>
+          <p className="font-body text-gray-400 text-base leading-relaxed">Sign in to continue to SAFE STREE and contribute to community safety</p>
         </motion.div>
 
         <form onSubmit={handleEmailLogin} className="space-y-6">
@@ -65,7 +65,7 @@ const Login: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2.5">
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2.5 font-body">
               Email Address
             </label>
             <div className="relative">
@@ -75,7 +75,7 @@ const Login: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-11 pr-4 py-3.5 bg-dark-700 bg-opacity-50 border border-gray-700 border-opacity-50 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-white placeholder-gray-500"
+                className="font-body w-full pl-11 pr-4 py-3.5 bg-dark-700 bg-opacity-50 border border-gray-700 border-opacity-50 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-white placeholder-gray-500 text-base"
                 placeholder="Enter your email address"
                 required
               />

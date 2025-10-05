@@ -83,8 +83,8 @@ const Signup: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">Join Safe Route</h1>
-          <p className="text-gray-400 text-base">Create your account to help build safer communities together</p>
+          <h1 className="font-heading text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">Join SAFE STREE</h1>
+          <p className="font-body text-gray-400 text-base leading-relaxed">Create your account to help build safer communities together</p>
         </motion.div>
 
         <form onSubmit={handleEmailSignup} className="space-y-5">

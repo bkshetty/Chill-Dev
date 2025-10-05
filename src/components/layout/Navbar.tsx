@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
             >
               <Shield className="w-4 h-4 text-white" />
             </motion.div>
-            <span className="text-lg font-bold text-white group-hover:text-primary-400 transition-colors duration-300">Safe Route</span>
+            <span className="font-heading text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-300 tracking-tight">SAFE STREE</span>
           </Link>
 
           {/* Desktop Navigation */}
