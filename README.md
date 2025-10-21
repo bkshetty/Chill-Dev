@@ -1,4 +1,4 @@
-# 🗺️ Safe Route - Community Safety Map
+# 🗺️ Safe Stree - Community Safety Map
 
 ![React](https://img.shields.io/badge/React-18-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)
